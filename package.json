@@ -3,7 +3,7 @@
   "private": true,
   "repository": "",
   "license": "MIT",
-  "author": "",
+  "author": "Liam Potter",
   "workspaces": [
     "packages/*"
   ],

@@ -25,15 +25,21 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@embroider/addon-shim": "^1.0.0"
+    "@embroider/addon-shim": "^1.0.0",
+    "ember-modifier": "^3.2.7"
   },
   "devDependencies": {
     "@babel/core": "^7.17.0",
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-proposal-decorators": "^7.17.0",
     "@babel/plugin-syntax-decorators": "^7.17.0",
+    "@babel/preset-typescript": "^7.17.12",
     "@embroider/addon-dev": "^1.0.0",
     "@rollup/plugin-babel": "^5.3.0",
+    "@types/ember": "^4.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
+    "autoprefixer": "^10.4.7",
     "babel-eslint": "^10.1.0",
     "ember-template-lint": "^4.0.0",
     "eslint": "^7.32.0",
@@ -42,7 +48,11 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "npm-run-all": "^4.1.5",
-    "rollup": "^2.67.0"
+    "postcss": "^8.4.14",
+    "rollup": "^2.67.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-ts": "^2.0.7",
+    "typescript": "^4.6.4"
   },
   "engines": {
     "node": "12.* || >= 14"
@@ -57,11 +67,18 @@
     "version": 2,
     "type": "addon",
     "main": "addon-main.js",
-    "app-js": {}
+    "app-js": {
+      "./components/marquee.js": "./dist/_app_/components/marquee.js",
+      "./modifiers/register-cleanup.js": "./dist/_app_/modifiers/register-cleanup.js"
+    }
   },
   "exports": {
-    ".": "./dist/index.js",
     "./*": "./dist/*",
     "./addon-main.js": "./addon-main.js"
+  },
+  "peerDependencies": {
+    "@glimmer/component": "^1.1.2",
+    "@glimmer/tracking": "^1.1.2",
+    "ember-source": "^4.4.0"
   }
 }
