@@ -1,5 +1,5 @@
 import babel from '@rollup/plugin-babel';
-import typescript from 'rollup-plugin-ts';
+// import typescript from 'rollup-plugin-ts';
 import autoprefixer from 'autoprefixer';
 import postcss from 'rollup-plugin-postcss';
 import { Addon } from '@embroider/addon-dev/rollup';
@@ -36,6 +36,13 @@ export default {
       'modifiers/register-cleanup.js',
     ]),
 
+    // // compile TypeScript
+    // typescript({
+    //   transpiler: 'babel',
+    //   browserslist: false,
+    //   transpileOnly: false,
+    // }),
+
     // This babel config should *not* apply presets or compile away ES modules.
     // It exists only to provide development niceties for you, like automatic
     // template colocation.
@@ -44,13 +51,8 @@ export default {
     // babel.config.json.
     babel({
       babelHelpers: 'bundled',
-    }),
-
-    // compile TypeScript
-    typescript({
-      transpiler: 'babel',
-      browserslist: false,
-      transpileOnly: false,
+      extensions: ['.js', '.ts'],
+      include: ['src/**/*'],
     }),
 
     // Follow the V2 Addon rules about dependencies. Your code can import from
