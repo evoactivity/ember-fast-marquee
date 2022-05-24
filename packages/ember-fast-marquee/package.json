@@ -13,14 +13,16 @@
     "dist"
   ],
   "scripts": {
-    "build": "rollup --config",
+    "build": "rollup --config && tsc --emitDeclarationOnly ",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
     "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*:fix",
     "lint:hbs": "ember-template-lint .",
     "lint:hbs:fix": "ember-template-lint . --fix",
     "lint:js": "eslint . --cache",
     "lint:js:fix": "eslint . --fix",
-    "start": "rollup --config --watch",
+    "start": "npm-run-all --aggregate-output --continue-on-error --parallel \"start:*\"",
+    "start:rollUpWatch": "rollup --config --watch",
+    "start:tscEmit": "tsc --emitDeclarationOnly --watch",
     "test": "echo 'A v2 addon does not have tests, run tests in test-app'",
     "prepare": "yarn build"
   },

@@ -63,6 +63,8 @@ export default {
     // Ensure that standalone .hbs files are properly integrated as Javascript.
     addon.hbs(),
 
+    addon.keepAssets(['**/*.d.ts']),
+
     // Remove leftover build artifacts when starting a new build.
     addon.clean(),
   ],
