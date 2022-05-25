@@ -53,7 +53,7 @@ Then wrap the `<Marquee>` component around any component or text you'd like to s
 
 ```hbs
 <Marquee>
-  I can be a React component, multiple React components, or just some text.
+  I can be a component, multiple components, plain html or just some text.
 </Marquee>
 ```
 Full Example
