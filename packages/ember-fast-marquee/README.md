@@ -103,7 +103,7 @@ Component Arguments
 | `speed`         | `number`                    | `20`              | Speed calculated as pixels/second                        |
 | `delay`         | `number`                    | `0`               | Duration to delay the animation after render, in seconds |
 | `loop`          | `number`                    | `0`               | The number of times the marquee should loop, 0 is equivalent to infinite         |
-| `gradient`      | `boolean`                   | `true`            | Whether to show the gradient or not                      |
+| `gradient`      | `boolean`                   | `false`            | Whether to show the gradient or not                      |
 | `gradientColor` | `string` | `"255,255,255"` | The rgb color of the gradient as a string of RGB values separated by commas    |
 | `gradientWidth` | `number` or `string`        | `"5%"`             | The width of the gradient on either side, if a number is passed % is used, if a string is passed it is used as is to allow other units to be used                 |
 | `onFinish` | `Function` | `undefined` | A callback for when the marquee finishes scrolling and stops. Only calls if loop is non-zero.    |
