@@ -59,22 +59,41 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
       !this.component ||
       !this.speed ||
       !this.gradientWidth
-    )
+    ) {
       return;
+    }
 
-    containerEl.style.setProperty(
-      '--fill-row',
-      this.fillRow ? 'max-content' : '100%'
-    );
-    containerEl.style.setProperty(
+    const setProp = containerEl.style.setProperty.bind(containerEl.style);
+
+    setProp('--fill-row', this.fillRow ? 'max-content' : '100%');
+    setProp(
       '--gradient-color',
       `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`
     );
 
-    containerEl.style.setProperty('--gradient-width', this.gradientWidth);
+    setProp('--gradient-width', this.gradientWidth);
+
+    setProp(
+      '--pause-on-hover',
+      !this.play ? 'paused' : this.pauseOnHover ? 'paused' : 'running'
+    );
+    setProp(
+      '--pause-on-click',
+      !this.play ? 'paused' : this.pauseOnClick ? 'paused' : 'running'
+    );
+    setProp('--play', this.play ? 'running' : 'paused');
+    setProp('--direction', this.direction === 'left' ? 'normal' : 'reverse');
+
+    setProp('--delay', `${this.delay}s`);
+    setProp('--iteration-count', this.loop ? '' + this.loop : 'infinite');
 
     this.component.containerWidth = containerEl.getBoundingClientRect().width;
     this.component.marqueeWidth = marqueeEl.getBoundingClientRect().width;
+
+    setProp(
+      '--marquee-scroll-amount',
+      this.fillRow ? `${this.component.marqueeWidth}px` : '100%'
+    );
 
     const duration =
       this.fillRow ||
@@ -82,29 +101,7 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
         ? this.component.marqueeWidth / this.speed
         : this.component.containerWidth / this.speed;
 
-    containerEl.style.setProperty(
-      '--pause-on-hover',
-      !this.play ? 'paused' : this.pauseOnHover ? 'paused' : 'running'
-    );
-    containerEl.style.setProperty(
-      '--pause-on-click',
-      !this.play ? 'paused' : this.pauseOnClick ? 'paused' : 'running'
-    );
-    containerEl.style.setProperty(
-      '--marquee-scroll-amount',
-      this.fillRow ? `${this.component.marqueeWidth}px` : '100%'
-    );
-    containerEl.style.setProperty('--play', this.play ? 'running' : 'paused');
-    containerEl.style.setProperty(
-      '--direction',
-      this.direction === 'left' ? 'normal' : 'reverse'
-    );
-    containerEl.style.setProperty('--duration', `${duration}s`);
-    containerEl.style.setProperty('--delay', `${this.delay}s`);
-    containerEl.style.setProperty(
-      '--iteration-count',
-      this.loop ? '' + this.loop : 'infinite'
-    );
+    setProp('--duration', `${duration}s`);
   }
 
   modify(
