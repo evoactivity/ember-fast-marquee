@@ -40,6 +40,7 @@
     "@embroider/addon-dev": "^1.0.0",
     "@rollup/plugin-babel": "^5.3.0",
     "@types/ember": "^4.0.0",
+    "@types/ember__destroyable": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",
     "autoprefixer": "^10.4.7",
@@ -71,7 +72,7 @@
     "main": "addon-main.js",
     "app-js": {
       "./components/marquee.js": "./dist/_app_/components/marquee.js",
-      "./modifiers/register-cleanup.js": "./dist/_app_/modifiers/register-cleanup.js"
+      "./modifiers/marquee.js": "./dist/_app_/modifiers/marquee.js"
     }
   },
   "exports": {

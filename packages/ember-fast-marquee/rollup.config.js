@@ -17,10 +17,7 @@ export default {
   plugins: [
     // These are the modules that users should be able to import from your
     // addon. Anything not listed here may get optimized away.
-    addon.publicEntrypoints([
-      'components/marquee.ts',
-      'modifiers/register-cleanup.ts',
-    ]),
+    addon.publicEntrypoints(['components/marquee.ts', 'modifiers/marquee.ts']),
 
     postcss({
       plugins: [autoprefixer()],
@@ -31,10 +28,7 @@ export default {
     // These are the modules that should get reexported into the traditional
     // "app" tree. Things in here should also be in publicEntrypoints above, but
     // not everything in publicEntrypoints necessarily needs to go here.
-    addon.appReexports([
-      'components/marquee.js',
-      'modifiers/register-cleanup.js',
-    ]),
+    addon.appReexports(['components/marquee.js', 'modifiers/marquee.js']),
 
     // // compile TypeScript
     // typescript({
