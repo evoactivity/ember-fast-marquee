@@ -1,4 +1,14 @@
 
+
+## v0.1.4 (2022-05-25)
+
+#### :memo: Documentation
+* `ember-fast-marquee`
+  * [#9](https://github.com/evoactivity/ember-fast-marquee/pull/9) Update README.md ([@evoactivity](https://github.com/evoactivity))
+
+#### Committers: 1
+- Liam Potter ([@evoactivity](https://github.com/evoactivity))
+
 ## v0.1.3 (2022-05-25)
 
 * Updated demo gif to component in action
