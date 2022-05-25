@@ -70,7 +70,7 @@ All options with defaults
   @delay={{0}}
   @loop={{0}}
   @gradient={{true}}
-  @gradientColor={{255,255,255}}
+  @gradientColor="255,255,255"
   @gradientWidth="5%"
   @onFinish={{this.someAction}}
   @onCycleComplete={{this.anotherAction}}
