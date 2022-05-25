@@ -1,27 +1,19 @@
-{{! template-lint-disable no-inline-styles }}
-These should be tracked<br />
-{{this.containerWidth}}<br />
-{{this.marqueeWidth}}<br />
-{{this.duration}}<br />
-{{this.containerEl.className}}<br />
-{{this.marqueeEl.className}}
-
 <div
   class={{this.styles.root}}
-  style={{this.containerStyles}}
   {{register-cleanup this.registerContainer}}
   ...attributes
 >
+  {{#if this.gradient}}
+    <div class={{this.styles.overlay}}></div>
+  {{/if}}
   <div
-    class={{this.styles.marquee}}
-    style={{this.marqueeStyles}}
+    class={{this.styles.scroller}}
     {{on 'animationiteration' this.onCycleComplete}}
     {{on 'animationend' this.onFinish}}
-    {{register-cleanup this.registerMarquee}}
-  >{{yield}}</div>
-  <div
-    class={{this.styles.marquee}}
-    style={{this.marqueeStyles}}
-  >{{yield}}</div>
-
+  >
+    <div class={{this.styles.marquee}}>{{yield}}</div>
+    {{#each this.repeater}}
+      <div class={{this.styles.marquee}} aria-hidden='true'>{{yield}}</div>
+    {{/each}}
+  </div>
 </div>

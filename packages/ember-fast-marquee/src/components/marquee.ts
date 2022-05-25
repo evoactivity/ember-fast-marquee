@@ -1,16 +1,24 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
-import { htmlSafe } from '@ember/template';
 import { tracked } from '@glimmer/tracking';
 import styles from './marquee.css';
 
-interface MarqueeArgs {
+type WithoutNullableKeys<Type> = {
+  [Key in keyof Type]-?: WithoutNullableKeys<NonNullable<Type[Key]>>;
+};
+interface MarqueeSignature {
   /**
    * Whether to play or pause the marquee
    * Type: boolean
    * Default: true
    */
   play?: boolean;
+  /**
+   * Whether to fill in empty space
+   * Type: boolean
+   * Default: false
+   */
+  fillRow?: boolean;
   /**
    * Whether to pause the marquee when hovered
    * Type: boolean
@@ -50,15 +58,15 @@ interface MarqueeArgs {
   /**
    * Whether to show the gradient or not
    * Type: boolean
-   * Default: true
+   * Default: false
    */
   gradient?: boolean;
   /**
    * The rgb color of the gradient as an array of length 3
-   * Type: Array<number> of length 3
-   * Default: [255, 255, 255]
+   * Type: string
+   * Default: 255, 255, 255
    */
-  gradientColor?: [number, number, number];
+  gradientColor?: string;
   /**
    * The width of the gradient on either side
    * Type: string
@@ -79,75 +87,83 @@ interface MarqueeArgs {
   onCycleComplete?: () => void;
 }
 
-export default class Marquee extends Component<MarqueeArgs> {
-  styles = styles;
+type Getters = WithoutNullableKeys<MarqueeSignature>;
 
-  hasMounted = false;
+export default class Marquee extends Component<MarqueeSignature> {
+  styles = styles;
 
   @tracked containerWidth = 0;
   @tracked marqueeWidth = 0;
-  @tracked containerEl?: HTMLDivElement = undefined;
-  @tracked marqueeEl?: HTMLDivElement = undefined;
   @tracked duration = 0;
 
-  get play(): MarqueeArgs['play'] {
+  get fillRow(): Getters['fillRow'] {
+    return this.args.fillRow || false;
+  }
+
+  get play(): Getters['play'] {
     return this.args.play || true;
   }
 
-  get pauseOnHover(): MarqueeArgs['pauseOnHover'] {
+  get pauseOnHover(): Getters['pauseOnHover'] {
     return this.args.pauseOnHover || false;
   }
 
-  get pauseOnClick(): MarqueeArgs['pauseOnClick'] {
+  get pauseOnClick(): Getters['pauseOnClick'] {
     return this.args.pauseOnClick || false;
   }
 
-  get loop(): MarqueeArgs['loop'] {
+  get loop(): Getters['loop'] {
     return this.args.loop || 0;
   }
 
-  get direction(): MarqueeArgs['direction'] {
+  get direction(): Getters['direction'] {
     return this.args.direction || 'left';
   }
 
-  get speed(): number {
+  get speed(): Getters['speed'] {
     return this.args.speed || 20;
   }
 
-  get delay(): MarqueeArgs['delay'] {
+  get delay(): Getters['delay'] {
     return this.args.delay || 0;
   }
 
-  get gradient(): MarqueeArgs['gradient'] {
+  get gradient(): Getters['gradient'] {
     return this.args.gradient || false;
   }
 
-  get gradientColor(): MarqueeArgs['gradientColor'] {
-    return this.args.gradientColor || [255, 255, 255];
+  get gradientColor(): Getters['gradientColor'] {
+    return this.args.gradientColor || '255, 255, 255';
   }
 
-  get gradientWidth(): MarqueeArgs['gradientWidth'] {
-    return this.args.gradientWidth || 200;
+  // If the value we receive is a number use it as a percentage,
+  // if we receive a string, use that as is for the value
+  get gradientWidth(): string {
+    const width = this.args.gradientWidth
+      ? this.args.gradientWidth === 'number'
+        ? `${this.args.gradientWidth}%`
+        : <string>this.args.gradientWidth
+      : null;
+    return width || '5%';
   }
 
   get rgbaGradientColor(): string {
-    return `rgba(${this.gradientColor?.[0]}, ${this.gradientColor?.[1]}, ${this.gradientColor?.[2]}`;
+    const gc = this.gradientColor.split(',');
+    return `rgba(${gc[0]}, ${gc[1]}, ${gc[2]}`;
   }
 
-  get containerStyles() {
-    return htmlSafe(`--paused-on-hover: ${
-      this.pauseOnHover ? 'paused' : 'running'
-    };
-    --pause-on-click: ${this.pauseOnClick ? 'paused' : 'running'};`);
+  get duplicateCount(): number {
+    return Math.ceil(this.containerWidth / this.marqueeWidth);
   }
 
-  get marqueeStyles() {
-    return htmlSafe(`--play: ${this.play ? 'running' : 'paused'};
-      --direction:
-        ${this.direction === 'left' ? 'normal' : 'reverse'};
-      --duration: ${this.duration}s;
-      --delay: ${this.delay}s;
-      --iteration-count: ${!!this.loop ? this.loop : 'infinite'};`);
+  // This is used to produce an array we can loop over to duplicate the children
+  // we always need at least 1 duplicate or we calculate how many to fill the space
+  // based on this.duplicateCount
+  get repeater(): number[] {
+    if (this.marqueeWidth < this.containerWidth) {
+      return Array.apply(null, Array(this.duplicateCount)).map((x, i) => i);
+    }
+    return [0];
   }
 
   @action
@@ -160,56 +176,69 @@ export default class Marquee extends Component<MarqueeArgs> {
     if (this.args.onCycleComplete) this.args.onCycleComplete();
   }
 
-  @action calculateWidth(): void {
-    this.hasMounted = true;
-    this.duration = 100;
-    console.log('Calculate width running');
-    console.log(this.marqueeEl, this.containerEl);
-    if (this.marqueeEl && this.containerEl) {
-      this.containerWidth = this.containerEl.getBoundingClientRect().width;
-      this.marqueeWidth = this.marqueeEl.getBoundingClientRect().width;
+  calculateWidth(containerEl: HTMLDivElement, marqueeEl: HTMLDivElement): void {
+    if (!marqueeEl && !containerEl) return;
 
-      console.log('Marque width: ', this.marqueeWidth);
-      console.log('Container width: ', this.containerWidth);
+    this.containerWidth = containerEl.getBoundingClientRect().width;
+    this.marqueeWidth = marqueeEl.getBoundingClientRect().width;
 
-      if (this.marqueeWidth < this.containerWidth) {
-        this.duration = this.containerWidth / this.speed;
-      } else {
-        this.duration = this.marqueeWidth / this.speed;
-      }
-
-      console.log('Duration: ', this.duration);
-      console.log('Component Context:');
-      console.log(this);
-    }
-  }
-
-  @action registerContainer(el: HTMLDivElement): (el: HTMLDivElement) => void {
-    this.containerEl = el;
-
-    if (!this.hasMounted && this.marqueeEl) {
-      this.calculateWidth();
-    }
-    return this.cleanupContainer;
-  }
-
-  @action registerMarquee(el: HTMLDivElement): (el: HTMLDivElement) => void {
-    this.marqueeEl = el;
-
-    if (!this.hasMounted && this.containerEl) {
-      this.calculateWidth();
+    if (this.fillRow || this.marqueeWidth > this.containerWidth) {
+      this.duration = this.marqueeWidth / this.speed;
+    } else {
+      this.duration = this.containerWidth / this.speed;
     }
 
-    window.addEventListener('resize', this.calculateWidth);
-    return this.cleanupMarquee;
+    containerEl.style.setProperty(
+      '--pause-on-hover',
+      this.pauseOnHover ? 'paused' : 'running'
+    );
+    containerEl.style.setProperty(
+      '--pause-on-click',
+      this.pauseOnClick ? 'paused' : 'running'
+    );
+    containerEl.style.setProperty(
+      '--duplicate-count',
+      '' + this.duplicateCount
+    );
+    containerEl.style.setProperty(
+      '--marquee-scroll-amount',
+      this.fillRow ? `${this.marqueeWidth}px` : '100%'
+    );
+    containerEl.style.setProperty('--play', this.play ? 'running' : 'paused');
+    containerEl.style.setProperty(
+      '--direction',
+      this.direction === 'left' ? 'normal' : 'reverse'
+    );
+    containerEl.style.setProperty('--duration', `${this.duration}s`);
+    containerEl.style.setProperty('--delay', `${this.delay}s`);
+    containerEl.style.setProperty(
+      '--iteration-count',
+      !!this.loop ? '' + this.loop : 'infinite'
+    );
   }
 
-  @action cleanupContainer(el: HTMLDivElement): void {
-    this.containerEl = undefined;
-    window.removeEventListener('resize', this.calculateWidth);
-  }
+  registerContainer = (el: HTMLDivElement): ((el: HTMLDivElement) => void) => {
+    const containerEl = el;
+    const marqueeEl = <HTMLDivElement>(
+      containerEl.querySelector('.' + this.styles.marquee)
+    );
 
-  @action cleanupMarquee(el: HTMLDivElement): void {
-    this.marqueeEl = undefined;
-  }
+    containerEl.style.setProperty(
+      '--fill-row',
+      this.fillRow ? 'max-content' : '100%'
+    );
+    containerEl.style.setProperty(
+      '--gradient-color',
+      `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`
+    );
+    containerEl.style.setProperty('--gradient-width', this.gradientWidth);
+    this.calculateWidth(containerEl, marqueeEl);
+
+    const fn = this.calculateWidth.bind(this, containerEl, marqueeEl);
+    window.addEventListener('resize', fn);
+
+    return () => {
+      window.removeEventListener('resize', fn);
+    };
+  };
 }

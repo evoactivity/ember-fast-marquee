@@ -4,12 +4,29 @@
   flex-direction: row !important;
   position: relative;
   width: 100%;
+  --fill-row: 100%;
+  --marquee-scroll-amount: 100%;
 }
-.root:hover div {
+
+.scroller {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  animation: scroll var(--duration) linear var(--delay) var(--iteration-count);
+  animation-play-state: var(--play);
+  animation-delay: var(--delay);
+  animation-direction: var(--direction);
+}
+
+.root:hover .scroller {
   animation-play-state: var(--pause-on-hover);
 }
 
-.root:active div {
+.root:active .scroller {
   animation-play-state: var(--pause-on-click);
 }
 
@@ -25,7 +42,7 @@
   content: '';
   height: 100%;
   position: absolute;
-  width: var(--gradient-width);
+  width: min(var(--gradient-width), 5%);
   z-index: 2;
 }
 
@@ -42,22 +59,18 @@
 
 .marquee {
   flex: 0 0 auto;
-  min-width: 100%;
+  min-width: var(--fill-row);
   z-index: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
-  animation: scroll var(--duration) linear var(--delay) var(--iteration-count);
-  animation-play-state: var(--play);
-  animation-delay: var(--delay);
-  animation-direction: var(--direction);
 }
 
 @keyframes scroll {
   0% {
-    transform: translateX(0%);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-100%);
+    transform: translate3d(calc(-0px - var(--marquee-scroll-amount)), 0, 0);
   }
 }

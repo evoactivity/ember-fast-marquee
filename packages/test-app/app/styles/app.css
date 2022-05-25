@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+}
+
+.pics .logo {
+  margin: auto 80px auto 0;
+  padding: 16px;
+}
+
+.pics .logo svg {
+  width: auto;
+  height: 40px;
+  overflow: hidden;
+}
+
+.fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: red;
+  padding: 20px;
+  color: #fff;
+  z-index: 20;
+}
