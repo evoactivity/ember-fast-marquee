@@ -1,5 +1,6 @@
 Ember Fast Marquee
 ==============================================================================
+[![NPM](https://badgen.net/npm/v/ember-fast-marquee)](https://www.npmjs.com/package/ember-fast-marquee)
 
 Ember Fast Marquee is a lightweight ember component that utilizes the power of CSS animations to create silky smooth marquees.
 
