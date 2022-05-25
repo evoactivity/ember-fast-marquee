@@ -53,7 +53,7 @@ Then wrap the `<Marquee>` component around any component or text you'd like to s
 
 ```hbs
 <Marquee>
-  I can be a React component, multiple React components, or just some text.
+  I can be a component, multiple components, plain html or just some text.
 </Marquee>
 ```
 Full Example
@@ -70,7 +70,7 @@ All options with defaults
   @delay={{0}}
   @loop={{0}}
   @gradient={{true}}
-  @gradientColor={{255,255,255}}
+  @gradientColor="255,255,255"
   @gradientWidth="5%"
   @onFinish={{this.someAction}}
   @onCycleComplete={{this.anotherAction}}
@@ -104,7 +104,7 @@ Component Arguments
 | `delay`         | `number`                    | `0`               | Duration to delay the animation after render, in seconds |
 | `loop`          | `number`                    | `0`               | The number of times the marquee should loop, 0 is equivalent to infinite         |
 | `gradient`      | `boolean`                   | `true`            | Whether to show the gradient or not                      |
-| `gradientColor` | `string` | `255,255,255` | The rgb color of the gradient as a string of RGB values separated by commas    |
+| `gradientColor` | `string` | `"255,255,255"` | The rgb color of the gradient as a string of RGB values separated by commas    |
 | `gradientWidth` | `number` or `string`        | `"5%"`             | The width of the gradient on either side, if a number is passed % is used, if a string is passed it is used as is to allow other units to be used                 |
 | `onFinish` | `Function` | `undefined` | A callback for when the marquee finishes scrolling and stops. Only calls if loop is non-zero.    |
 | `onCycleComplete` | `Function`        | `undefined`             | A callback for when the marquee finishes a loop. Does not call if maximum loops are reached (use onFinish instead).                 |
