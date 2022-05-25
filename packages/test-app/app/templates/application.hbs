@@ -1,7 +1,12 @@
 {{page-title 'Ember Fast Marquee'}}
 {{! template-lint-disable no-inline-styles }}
 
-<Marquee @speed={{30}} @fillRow={{true}} @gradient={{true}} class='pics'>
+<button type='submit' {{on 'click' (fn (mut this.play) true)}}>Play</button>
+<button type='submit' {{on 'click' (fn (mut this.play) false)}}>Pause</button>
+
+{{if this.play 'playing' 'paused'}}
+<br /><br /><br /><br />
+<Marquee @speed={{30}} @fillRow={{true}} @play={{this.play}} class='pics'>
   <div class='logo'>
     <svg
       id='logo-gen1'
@@ -245,7 +250,7 @@
   </div>
 
 </Marquee>
-
+{{!--
 <Marquee @speed={{140}} @fillRow={{true}}>
   <h2>Welcome to Ember</h2>
   <h2>Welcome to the jungle</h2>
@@ -296,5 +301,5 @@
 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
 /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
 /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-
+ --}}
 {{outlet}}

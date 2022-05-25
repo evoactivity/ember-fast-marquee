@@ -100,7 +100,10 @@ export default class Marquee extends Component<MarqueeSignature> {
   }
 
   get play(): Getters['play'] {
-    return this.args.play || true;
+    if (typeof this.args.play === 'undefined') {
+      return true;
+    }
+    return this.args.play;
   }
 
   get pauseOnHover(): Getters['pauseOnHover'] {
@@ -169,67 +172,4 @@ export default class Marquee extends Component<MarqueeSignature> {
   onCycleComplete(): void {
     if (this.args.onCycleComplete) this.args.onCycleComplete();
   }
-
-  //TODO move to modifier
-  calculateWidth(containerEl: HTMLDivElement, marqueeEl: HTMLDivElement): void {
-    if (!marqueeEl && !containerEl) return;
-
-    this.containerWidth = containerEl.getBoundingClientRect().width;
-    this.marqueeWidth = marqueeEl.getBoundingClientRect().width;
-
-    const duration =
-      this.fillRow || this.marqueeWidth > this.containerWidth
-        ? this.marqueeWidth / this.speed
-        : this.containerWidth / this.speed;
-
-    containerEl.style.setProperty(
-      '--pause-on-hover',
-      this.pauseOnHover ? 'paused' : 'running'
-    );
-    containerEl.style.setProperty(
-      '--pause-on-click',
-      this.pauseOnClick ? 'paused' : 'running'
-    );
-    containerEl.style.setProperty(
-      '--marquee-scroll-amount',
-      this.fillRow ? `${this.marqueeWidth}px` : '100%'
-    );
-    containerEl.style.setProperty('--play', this.play ? 'running' : 'paused');
-    containerEl.style.setProperty(
-      '--direction',
-      this.direction === 'left' ? 'normal' : 'reverse'
-    );
-    containerEl.style.setProperty('--duration', `${duration}s`);
-    containerEl.style.setProperty('--delay', `${this.delay}s`);
-    containerEl.style.setProperty(
-      '--iteration-count',
-      this.loop ? '' + this.loop : 'infinite'
-    );
-  }
-
-  //TODO move to modifier
-  registerContainer = (el: HTMLDivElement): (() => void) => {
-    const containerEl = el;
-    const marqueeEl = <HTMLDivElement>(
-      containerEl.querySelector('.' + this.styles.marquee)
-    );
-
-    containerEl.style.setProperty(
-      '--fill-row',
-      this.fillRow ? 'max-content' : '100%'
-    );
-    containerEl.style.setProperty(
-      '--gradient-color',
-      `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`
-    );
-    containerEl.style.setProperty('--gradient-width', this.gradientWidth);
-    this.calculateWidth(containerEl, marqueeEl);
-
-    const fn = this.calculateWidth.bind(this, containerEl, marqueeEl);
-    window.addEventListener('resize', fn);
-
-    return () => {
-      window.removeEventListener('resize', fn);
-    };
-  };
 }

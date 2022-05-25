@@ -1,6 +1,19 @@
 <div
   class={{this.styles.root}}
-  {{register-cleanup this.registerContainer}}
+  {{marquee
+    this
+    delay=this.delay
+    direction=this.direction
+    fillRow=this.fillRow
+    gradientWidth=this.gradientWidth
+    loop=this.loop
+    marqueeSelector=this.styles.marquee
+    pauseOnClick=this.pauseOnClick
+    pauseOnHover=this.pauseOnHover
+    play=this.play
+    rgbaGradientColor=this.rgbaGradientColor
+    speed=this.speed
+  }}
   ...attributes
 >
   {{#if this.gradient}}
