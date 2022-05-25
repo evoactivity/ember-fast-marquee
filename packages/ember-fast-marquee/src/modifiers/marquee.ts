@@ -21,7 +21,7 @@ interface MarqueeModifierSignature {
   };
 }
 
-function cleanup(instance: MarqueeModifier) {
+function cleanup(instance: MarqueeModifier): void {
   if (instance.boundFn) {
     window.removeEventListener('resize', instance.boundFn);
   }
@@ -120,7 +120,7 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
       rgbaGradientColor,
       speed,
     }: NamedArgs<MarqueeModifierSignature>
-  ) {
+  ): void {
     this.component = componentContext;
     this.delay = delay;
     this.direction = direction;

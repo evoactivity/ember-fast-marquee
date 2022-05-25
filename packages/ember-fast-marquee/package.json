@@ -1,13 +1,18 @@
 {
   "name": "ember-fast-marquee",
   "version": "0.0.0",
-  "description": "The default blueprint for Embroider v2 addons.",
+  "description": "A lightweight Ember component that uses CSS animations to create silky smooth marquees.",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "ember",
+    "slider",
+    "ember-addon",
+    "marquee",
+    "embroider"
   ],
-  "repository": "",
+  "repository": "https://github.com/evoactivity/ember-fast-marquee",
   "license": "MIT",
-  "author": "",
+  "author": "Liam Potter",
   "files": [
     "addon-main.js",
     "dist"
@@ -27,35 +32,35 @@
     "prepare": "yarn build"
   },
   "dependencies": {
-    "@embroider/addon-shim": "^1.0.0",
+    "@embroider/addon-shim": "^1.7.1",
     "ember-modifier": "^3.2.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.0",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
-    "@babel/plugin-proposal-decorators": "^7.17.12",
-    "@babel/plugin-syntax-decorators": "^7.17.0",
-    "@babel/preset-env": "^7.18.0",
+    "@babel/core": "^7.18.2",
+    "@babel/plugin-proposal-class-properties": "^7.17.12",
+    "@babel/plugin-proposal-decorators": "^7.18.2",
+    "@babel/plugin-syntax-decorators": "^7.17.12",
+    "@babel/preset-env": "^7.18.2",
     "@babel/preset-typescript": "^7.17.12",
-    "@embroider/addon-dev": "^1.0.0",
-    "@rollup/plugin-babel": "^5.3.0",
+    "@embroider/addon-dev": "^1.7.1",
+    "@rollup/plugin-babel": "^5.3.1",
     "@types/ember": "^4.0.0",
     "@types/ember__destroyable": "^4.0.0",
     "@typescript-eslint/eslint-plugin": "^5.26.0",
     "@typescript-eslint/parser": "^5.26.0",
     "autoprefixer": "^10.4.7",
     "babel-eslint": "^10.1.0",
-    "ember-template-lint": "^4.0.0",
+    "ember-template-lint": "^4.9.1",
     "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-ember": "^10.5.8",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-ember": "^10.6.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.14",
-    "rollup": "^2.67.0",
+    "rollup": "^2.74.1",
     "rollup-plugin-postcss": "^4.0.2",
-    "typescript": "^4.6.4"
+    "typescript": "^4.7.2"
   },
   "engines": {
     "node": "12.* || >= 14"

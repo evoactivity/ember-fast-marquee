@@ -22,7 +22,7 @@ jobs:
       - name: Setup node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
       - name: Lint
@@ -42,7 +42,7 @@ jobs:
           - ember-release
           - ember-beta
           - ember-canary
-          - ember-default-with-jquery
+          - ember-lts-with-jquery
           - ember-classic
           - embroider-safe
           - embroider-optimized
@@ -53,7 +53,7 @@ jobs:
       - name: Setup node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 12
+          node-version: 16
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
       - name: Test
