@@ -80,6 +80,21 @@
       "./modifiers/marquee.js": "./dist/_app_/modifiers/marquee.js"
     }
   },
+  "release-it": {
+    "plugins": {
+      "release-it-lerna-changelog": {
+        "infile": "CHANGELOG.md",
+        "launchEditor": false
+      }
+    },
+    "git": {
+      "tagName": "v${version}"
+    },
+    "github": {
+      "release": true,
+      "tokenRef": "GITHUB_AUTH"
+    }
+  },
   "exports": {
     "./*": "./dist/*",
     "./addon-main.js": "./addon-main.js"
