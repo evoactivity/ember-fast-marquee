@@ -157,9 +157,7 @@ export default class Marquee extends Component<MarqueeSignature> {
   // otherwise always need at least 1 duplicate or we calculate how many to fill the space
   get repeater(): number[] {
     if (this.marqueeWidth >= this.containerWidth) return [0];
-    return [...Array(Math.ceil(this.containerWidth / this.marqueeWidth))].map(
-      (x, i) => i
-    );
+    return [...Array(Math.ceil(this.containerWidth / this.marqueeWidth))];
   }
 
   @action

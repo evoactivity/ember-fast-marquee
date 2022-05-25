@@ -22,12 +22,12 @@
   animation-direction: var(--direction);
 }
 
-.root:hover .scroller {
-  animation-play-state: var(--pause-on-hover);
-}
-
 .root:active .scroller {
   animation-play-state: var(--pause-on-click);
+}
+
+.root:hover .scroller {
+  animation-play-state: var(--pause-on-hover);
 }
 
 .overlay {
