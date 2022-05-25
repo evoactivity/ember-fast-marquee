@@ -1,4 +1,9 @@
 
+## v0.1.1 (2022-05-25)
+
+Symlinked readme to show it on npm
+
+
 ## v0.1.0 (2022-05-25)
 
 #### :rocket: Enhancement
