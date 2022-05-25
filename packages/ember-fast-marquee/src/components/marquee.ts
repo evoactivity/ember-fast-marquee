@@ -94,7 +94,6 @@ export default class Marquee extends Component<MarqueeSignature> {
 
   @tracked containerWidth = 0;
   @tracked marqueeWidth = 0;
-  @tracked duration = 0;
 
   get fillRow(): Getters['fillRow'] {
     return this.args.fillRow || false;
@@ -152,18 +151,15 @@ export default class Marquee extends Component<MarqueeSignature> {
     return `rgba(${gc[0]}, ${gc[1]}, ${gc[2]}`;
   }
 
-  get duplicateCount(): number {
-    return Math.ceil(this.containerWidth / this.marqueeWidth);
-  }
-
-  // This is used to produce an array we can loop over to duplicate the children
-  // we always need at least 1 duplicate or we calculate how many to fill the space
-  // based on this.duplicateCount
+  // This is used to produce an array we can loop over in the template to output multiple
+  // {{yield}} blocks tagged with aria-hidden.
+  // If the marquee container is larger or the same size as the container, we only need one duplicate,
+  // otherwise always need at least 1 duplicate or we calculate how many to fill the space
   get repeater(): number[] {
-    if (this.marqueeWidth < this.containerWidth) {
-      return Array.apply(null, Array(this.duplicateCount)).map((x, i) => i);
-    }
-    return [0];
+    if (this.marqueeWidth >= this.containerWidth) return [0];
+    return [...Array(Math.ceil(this.containerWidth / this.marqueeWidth))].map(
+      (x, i) => i
+    );
   }
 
   @action
@@ -176,17 +172,17 @@ export default class Marquee extends Component<MarqueeSignature> {
     if (this.args.onCycleComplete) this.args.onCycleComplete();
   }
 
+  //TODO move to modifier
   calculateWidth(containerEl: HTMLDivElement, marqueeEl: HTMLDivElement): void {
     if (!marqueeEl && !containerEl) return;
 
     this.containerWidth = containerEl.getBoundingClientRect().width;
     this.marqueeWidth = marqueeEl.getBoundingClientRect().width;
 
-    if (this.fillRow || this.marqueeWidth > this.containerWidth) {
-      this.duration = this.marqueeWidth / this.speed;
-    } else {
-      this.duration = this.containerWidth / this.speed;
-    }
+    const duration =
+      this.fillRow || this.marqueeWidth > this.containerWidth
+        ? this.marqueeWidth / this.speed
+        : this.containerWidth / this.speed;
 
     containerEl.style.setProperty(
       '--pause-on-hover',
@@ -197,10 +193,6 @@ export default class Marquee extends Component<MarqueeSignature> {
       this.pauseOnClick ? 'paused' : 'running'
     );
     containerEl.style.setProperty(
-      '--duplicate-count',
-      '' + this.duplicateCount
-    );
-    containerEl.style.setProperty(
       '--marquee-scroll-amount',
       this.fillRow ? `${this.marqueeWidth}px` : '100%'
     );
@@ -209,15 +201,16 @@ export default class Marquee extends Component<MarqueeSignature> {
       '--direction',
       this.direction === 'left' ? 'normal' : 'reverse'
     );
-    containerEl.style.setProperty('--duration', `${this.duration}s`);
+    containerEl.style.setProperty('--duration', `${duration}s`);
     containerEl.style.setProperty('--delay', `${this.delay}s`);
     containerEl.style.setProperty(
       '--iteration-count',
-      !!this.loop ? '' + this.loop : 'infinite'
+      this.loop ? '' + this.loop : 'infinite'
     );
   }
 
-  registerContainer = (el: HTMLDivElement): ((el: HTMLDivElement) => void) => {
+  //TODO move to modifier
+  registerContainer = (el: HTMLDivElement): (() => void) => {
     const containerEl = el;
     const marqueeEl = <HTMLDivElement>(
       containerEl.querySelector('.' + this.styles.marquee)

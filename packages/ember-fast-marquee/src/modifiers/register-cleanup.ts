@@ -6,7 +6,7 @@ export default modifier(
   function registerCleanup(element: HTMLElement, [register]: [PassedFunction]) {
     const cleanup: PassedFunction = register(element);
 
-    return () => {
+    return (): void => {
       cleanup(element);
     };
   },
