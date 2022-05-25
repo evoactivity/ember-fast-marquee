@@ -70,5 +70,8 @@
   },
   "ember": {
     "edition": "octane"
+  },
+  "dependencies": {
+    "@ember/jquery": "^2.0.0"
   }
 }
