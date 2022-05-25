@@ -1,4 +1,9 @@
 
+## v0.1.3 (2022-05-25)
+
+* Updated demo gif to component in action
+
+
 ## v0.1.2 (2022-05-25)
 
 Switched symlink positions.
