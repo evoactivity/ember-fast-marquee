@@ -13,7 +13,7 @@ Differences from React Fast Marquee
 - Use `@fillRow={{true}}` to fill any left over white space if desired
 - 1 transform3d animation per marquee
 
-[1]: https://media.giphy.com/media/6ritiN2cpvpsyz4fo6/giphy.gif "demo gif"
+[1]: https://i.imgur.com/f0xMyW6.gif "demo gif"
 [2]: https://github.com/justin-chu/react-fast-marquee/
 
 Compatibility
