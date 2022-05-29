@@ -25,6 +25,7 @@ function cleanup(instance: MarqueeModifier): void {
   if (instance.boundFn) {
     window.removeEventListener('resize', instance.boundFn);
   }
+  if (instance.listeningForResize) instance.listeningForResize = false;
 }
 
 type MarqueeState = NamedArgs<MarqueeModifierSignature>;
@@ -43,6 +44,7 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   play?: MarqueeState['play'];
   rgbaGradientColor?: MarqueeState['rgbaGradientColor'];
   speed?: MarqueeState['speed'];
+  listeningForResize?: boolean;
 
   constructor(owner: unknown, args: ArgsFor<MarqueeModifierSignature>) {
     super(owner, args);
@@ -146,6 +148,9 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
       containerEl,
       marqueeEl
     );
-    window.addEventListener('resize', this.boundFn);
+    if (!this.listeningForResize) {
+      window.addEventListener('resize', this.boundFn);
+      this.listeningForResize = true;
+    }
   }
 }
