@@ -30,6 +30,14 @@
   animation-play-state: var(--pause-on-hover);
 }
 
+.root[style*="--pause-on-click: paused"]:hover:active .scroller {
+  animation-play-state: var(--pause-on-click);
+}
+
+.root[style*="--pause-on-hover: paused"]:hover:active .scroller {
+  animation-play-state: var(--pause-on-hover);
+}
+
 .overlay {
   position: absolute;
   width: 100%;
