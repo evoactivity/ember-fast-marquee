@@ -1,5 +1,19 @@
 
 
+
+## v0.1.5 (2022-05-29)
+
+#### :rocket: Enhancement
+* `ember-fast-marquee`
+  * [#13](https://github.com/evoactivity/ember-fast-marquee/pull/13) Clicking a pause on hover element no longer disables the pause ([@evoactivity](https://github.com/evoactivity))
+
+#### :bug: Bug Fix
+* `ember-fast-marquee`
+  * [#12](https://github.com/evoactivity/ember-fast-marquee/pull/12) Make sure the resize event listener is only added once per marquee ([@evoactivity](https://github.com/evoactivity))
+
+#### Committers: 1
+- Liam Potter ([@evoactivity](https://github.com/evoactivity))
+
 ## v0.1.4 (2022-05-25)
 
 #### :memo: Documentation
