@@ -250,8 +250,8 @@
   </div>
 
 </Marquee>
-{{!--
-<Marquee @speed={{140}} @fillRow={{true}}>
+
+<Marquee @play={{this.play}} @speed={{140}} @fillRow={{true}}>
   <h2>Welcome to Ember</h2>
   <h2>Welcome to the jungle</h2>
   <h2>gets worse here day by day</h2>
@@ -270,16 +270,17 @@
 </Marquee>
 
 <div class='fixed'>
-  <Marquee @speed={{50}} @fillRow={{true}}>
+  <Marquee @play={{this.play}} @speed={{50}} @fillRow={{true}}>
     <h2>Welcome to Ember</h2>
   </Marquee>
 </div>
 
-<Marquee @speed={{50}}>
+<Marquee @play={{this.play}} @speed={{50}}>
   <h2>Welcome to Ember</h2>
 </Marquee>
 
 <Marquee
+  @play={{this.play}}
   @speed={{50}}
   @fillRow={{true}}
   @gradient={{true}}
@@ -288,18 +289,18 @@
   <h2>Welcome to Ember</h2>
 </Marquee>
 
-<Marquee @speed={{50}} @direction='right'>
+<Marquee @play={{this.play}} @speed={{50}} @direction='right'>
   <h2>Welcome to Ember</h2>
 </Marquee>
 
-<Marquee @speed={{60}} @pauseOnHover={{true}}>
-  <h2><a href='https://google.com'>Welcome</a> to Ember</h2>
+<Marquee @play={{this.play}} @speed={{60}} @pauseOnHover={{true}}>
+  <h2>Pause on hover</h2>
 </Marquee>
-<Marquee @speed={{130}} @pauseOnClick={{true}}>
-  <h2>Welcome to Ember</h2>
+<Marquee @play={{this.play}} @speed={{130}} @pauseOnClick={{true}}>
+  <h2>Pause on click to Ember</h2>
 </Marquee>
 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
 /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br
 /><br /><br /><br /><br /><br /><br /><br /><br /><br />
- --}}
+
 {{outlet}}
