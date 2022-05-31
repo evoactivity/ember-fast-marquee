@@ -44,7 +44,7 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   play?: MarqueeState['play'];
   rgbaGradientColor?: MarqueeState['rgbaGradientColor'];
   speed?: MarqueeState['speed'];
-  listeningForResize?: boolean;
+  listeningForResize = false;
 
   constructor(owner: unknown, args: ArgsFor<MarqueeModifierSignature>) {
     super(owner, args);
@@ -94,7 +94,10 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
 
     setProp(
       '--marquee-scroll-amount',
-      this.fillRow ? `${this.component.marqueeWidth}px` : '100%'
+      this.fillRow ||
+        this.component.containerWidth < this.component.marqueeWidth
+        ? `${this.component.marqueeWidth}px`
+        : '100%'
     );
 
     const duration =
