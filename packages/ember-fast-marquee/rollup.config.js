@@ -1,5 +1,4 @@
-import babel from '@rollup/plugin-babel';
-// import typescript from 'rollup-plugin-ts';
+import typescript from 'rollup-plugin-ts';
 import autoprefixer from 'autoprefixer';
 import postcss from 'rollup-plugin-postcss';
 import { Addon } from '@embroider/addon-dev/rollup';
@@ -30,12 +29,12 @@ export default {
     // not everything in publicEntrypoints necessarily needs to go here.
     addon.appReexports(['components/marquee.js', 'modifiers/marquee.js']),
 
-    // // compile TypeScript
-    // typescript({
-    //   transpiler: 'babel',
-    //   browserslist: false,
-    //   transpileOnly: false,
-    // }),
+    // compile TypeScript
+    typescript({
+      transpiler: 'babel',
+      browserslist: false,
+      transpileOnly: false,
+    }),
 
     // This babel config should *not* apply presets or compile away ES modules.
     // It exists only to provide development niceties for you, like automatic
@@ -43,11 +42,9 @@ export default {
     //
     // By default, this will load the actual babel config from the file
     // babel.config.json.
-    babel({
-      babelHelpers: 'bundled',
-      extensions: ['.js', '.ts'],
-      include: ['src/**/*'],
-    }),
+    // babel({
+    //   babelHelpers: 'bundled',
+    // }),
 
     // Follow the V2 Addon rules about dependencies. Your code can import from
     // `dependencies` and `peerDependencies` as well as standard Ember-provided
@@ -57,7 +54,7 @@ export default {
     // Ensure that standalone .hbs files are properly integrated as Javascript.
     addon.hbs(),
 
-    addon.keepAssets(['**/*.d.ts']),
+    // addon.keepAssets(['**/*.d.ts']),
 
     // Remove leftover build artifacts when starting a new build.
     addon.clean(),
