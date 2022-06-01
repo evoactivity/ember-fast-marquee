@@ -1,6 +1,23 @@
 
 
 
+
+## v0.1.6 (2022-06-01)
+
+#### :rocket: Enhancement
+* `ember-fast-marquee`, `test-app`
+  * [#16](https://github.com/evoactivity/ember-fast-marquee/pull/16) Add tests ([@evoactivity](https://github.com/evoactivity))
+* `ember-fast-marquee`
+  * [#15](https://github.com/evoactivity/ember-fast-marquee/pull/15) Stop marquee if prefers-reduced-motion = true ([@evoactivity](https://github.com/evoactivity))
+  * [#17](https://github.com/evoactivity/ember-fast-marquee/pull/17) Use rollup-plugin-ts to compile typescript ([@evoactivity](https://github.com/evoactivity))
+
+#### :memo: Documentation
+* `ember-fast-marquee`
+  * [#10](https://github.com/evoactivity/ember-fast-marquee/pull/10) Readme Badges ([@evoactivity](https://github.com/evoactivity))
+
+#### Committers: 1
+- Liam Potter ([@evoactivity](https://github.com/evoactivity))
+
 ## v0.1.5 (2022-05-29)
 
 #### :rocket: Enhancement

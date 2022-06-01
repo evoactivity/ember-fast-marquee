@@ -1,6 +1,6 @@
 {
   "name": "ember-fast-marquee",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A lightweight Ember component that uses CSS animations to create silky smooth marquees.",
   "keywords": [
     "ember-addon",
