@@ -8,6 +8,7 @@
     "packages/*"
   ],
   "scripts": {
+    "postintall": "yarn build",
     "build": "yarn workspace ember-fast-marquee run prepare",
     "buildForTest": "KEEP_DATA_TEST_SELECTORS=1 yarn workspace ember-fast-marquee run prepare",
     "start": "KEEP_DATA_TEST_SELECTORS=1 npm-run-all --parallel start:*",
