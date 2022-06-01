@@ -14,19 +14,28 @@
     rgbaGradientColor=this.rgbaGradientColor
     speed=this.speed
   }}
+  data-test-marquee
   ...attributes
 >
   {{#if this.gradient}}
-    <div class={{this.styles.overlay}}></div>
+    <div class={{this.styles.overlay}} data-test-marquee-gradient></div>
   {{/if}}
   <div
     class={{this.styles.scroller}}
+    data-test-marquee-scroller
     {{on 'animationiteration' this.onCycleComplete}}
     {{on 'animationend' this.onFinish}}
   >
-    <div class={{this.styles.marquee}}>{{yield}}</div>
+    <div
+      class='{{this.styles.marquee}}'
+      data-test-marquee-marquee
+    >{{yield}}</div>
     {{#each this.repeater}}
-      <div class={{this.styles.marquee}} aria-hidden='true'>{{yield}}</div>
+      <div
+        class={{this.styles.marquee}}
+        aria-hidden='true'
+        data-test-marquee-repeater
+      >{{yield}}</div>
     {{/each}}
   </div>
 </div>

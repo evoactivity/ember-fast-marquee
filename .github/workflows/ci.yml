@@ -7,9 +7,12 @@ on:
       - master
   pull_request: {}
 
+env:
+  KEEP_DATA_TEST_SELECTORS: '1'
+
 concurrency:
-   group: ci-${{ github.head_ref || github.ref }}
-   cancel-in-progress: true
+  group: ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -59,4 +62,3 @@ jobs:
       - name: Test
         run: yarn ember try:one ${{ matrix.scenario }}
         working-directory: packages/test-app
-

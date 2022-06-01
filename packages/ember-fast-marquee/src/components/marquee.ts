@@ -142,7 +142,7 @@ export default class Marquee extends Component<MarqueeSignature> {
   // if we receive a string, use that as is for the value
   get gradientWidth(): string {
     const width = this.args.gradientWidth
-      ? this.args.gradientWidth === 'number'
+      ? typeof this.args.gradientWidth === 'number'
         ? `${this.args.gradientWidth}%`
         : <string>this.args.gradientWidth
       : null;
