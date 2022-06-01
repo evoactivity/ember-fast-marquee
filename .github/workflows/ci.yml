@@ -7,6 +7,9 @@ on:
       - master
   pull_request: {}
 
+env:
+  KEEP_DATA_TEST_SELECTORS: '1'
+
 concurrency:
   group: ci-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
@@ -28,7 +31,7 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: Test
-        run: yarn buildForTest && yarn test
+        run: yarn test
 
   test-try:
     name: Additional Tests
@@ -57,5 +60,5 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
       - name: Test
-        run: KEEP_DATA_TEST_SELECTORS=1 yarn ember try:one ${{ matrix.scenario }}
+        run: yarn ember try:one ${{ matrix.scenario }}
         working-directory: packages/test-app
