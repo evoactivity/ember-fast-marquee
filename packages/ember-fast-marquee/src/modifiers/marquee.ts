@@ -102,7 +102,7 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
 
     const duration =
       this.fillRow ||
-      this.component.marqueeWidth > this.component.containerWidth
+      this.component.containerWidth < this.component.marqueeWidth
         ? this.component.marqueeWidth / this.speed
         : this.component.containerWidth / this.speed;
 
