@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "prepare": "yarn workspace ember-fast-marquee run prepare",
-    "start": "npm-run-all --parallel start:*",
+    "start": "KEEP_DATA_TEST_SELECTORS=1 npm-run-all --parallel start:*",
     "start:addon": "yarn workspace ember-fast-marquee run start",
     "start:test-app": "yarn workspace test-app run start",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
