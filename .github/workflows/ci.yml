@@ -57,5 +57,5 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
       - name: Test
-        run: yarn buildForTest && yarn ember try:one ${{ matrix.scenario }}
+        run: yarn ember try:one ${{ matrix.scenario }}
         working-directory: packages/test-app
