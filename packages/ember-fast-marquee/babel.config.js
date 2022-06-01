@@ -19,7 +19,7 @@ if (!keepSelectors) {
     {
       rules: [
         {
-          search: /data-test[a-zA-Z-]*/g,
+          search: /data-test[a-zA-Z0-9-]*/g,
           replace: '',
         },
       ],

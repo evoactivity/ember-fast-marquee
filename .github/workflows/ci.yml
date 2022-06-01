@@ -8,8 +8,8 @@ on:
   pull_request: {}
 
 concurrency:
-   group: ci-${{ github.head_ref || github.ref }}
-   cancel-in-progress: true
+  group: ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -28,7 +28,7 @@ jobs:
       - name: Lint
         run: yarn lint
       - name: Test
-        run: yarn test
+        run: yarn buildForTest && yarn test
 
   test-try:
     name: Additional Tests
@@ -57,6 +57,5 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
       - name: Test
-        run: yarn ember try:one ${{ matrix.scenario }}
+        run: yarn buildForTest && yarn ember try:one ${{ matrix.scenario }}
         working-directory: packages/test-app
-
