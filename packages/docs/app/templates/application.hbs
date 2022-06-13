@@ -10,7 +10,7 @@
   /> }}
   <div class='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
     <div class='flex justify-between items-baseline gap-8 flex-col md:flex-row'>
-      <div class='flex items-baseline gap-4 mx-auto md:w-52 w-full'>
+      <div class='flex items-baseline gap-4 mx-auto md:w-80 w-full'>
         <Marquee
           @speed={{70}}
           @gradient={{true}}
@@ -90,8 +90,9 @@
         </a>
       </div>
       <div class='mt-8 md:mt-0 md:order-1'>
-        <p class='text-center text-base text-gray-400'>&copy; 2020 Liam Potter.
-          All rights reserved.</p>
+        <p class='text-center text-base text-gray-400'>&copy;
+          {{this.year}}
+          Liam Potter. All rights reserved.</p>
       </div>
     </div>
   </div>
