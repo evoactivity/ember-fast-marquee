@@ -1,18 +1,10 @@
-@import url('https://rsms.me/inter/inter.css');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 html {
-  @apply font-sans-no-variation;
+  @apply font-sans;
   font-weight: 300;
-}
-
-@supports (font-variation-settings: normal) {
-  html {
-    @apply font-sans;
-  }
 }
 
 .logo {

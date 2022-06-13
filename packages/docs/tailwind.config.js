@@ -11,10 +11,6 @@ module.exports = {
   content: [path.join(appEntry, relevantFilesGlob)],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-        'sans-no-variation': ['Inter', ...defaultTheme.fontFamily.sans],
-      },
       colors: {
         'ember-orange': {
           DEFAULT: '#E34C32',
