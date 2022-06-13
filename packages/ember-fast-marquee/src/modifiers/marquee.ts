@@ -2,6 +2,7 @@ import Modifier, { ArgsFor, PositionalArgs, NamedArgs } from 'ember-modifier';
 import { registerDestructor } from '@ember/destroyable';
 import type component from '../components/marquee';
 import { service } from '@ember/service';
+import type ResizeObserverService from 'ember-resize-observer-service/services/resize-observer';
 
 interface MarqueeModifierSignature {
   Args: {
@@ -32,11 +33,11 @@ function cleanup(instance: MarqueeModifier): void {
 type MarqueeState = NamedArgs<MarqueeModifierSignature>;
 
 export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> {
-  @service resizeObserver!: any;
+  @service resizeObserver!: ResizeObserverService;
 
   boundFn?: (() => void) | null = null;
   component?: component;
-  containerEl?: HTMLDivElement;
+  containerEl!: HTMLDivElement;
   delay?: MarqueeState['delay'];
   direction?: MarqueeState['direction'];
   fillRow?: MarqueeState['fillRow'];

@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "prepare": "yarn workspace ember-fast-marquee run prepare",
-    "start": "KEEP_DATA_TEST_SELECOTRS=1 npm-run-all --parallel start:*",
+    "start": "KEEP_DATA_TEST_SELECTORS=1 npm-run-all --parallel start:*",
     "start:addon": "yarn workspace ember-fast-marquee run start",
     "start:test-app": "yarn workspace test-app run start",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
@@ -18,7 +18,7 @@
     "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel lint:fix:*",
     "lint:fix:addon": "yarn workspace ember-fast-marquee run lint:fix",
     "lint:fix:test-app": "yarn workspace test-app run lint:fix",
-    "test": "npm-run-all --aggregate-output --continue-on-error --parallel \"test:!(watch)\"",
+    "test": "KEEP_DATA_TEST_SELECTORS=1 yarn prepare && npm-run-all --aggregate-output --continue-on-error --parallel \"test:!(watch)\"",
     "test:watch": "npm-run-all --aggregate-output --continue-on-error --parallel test:watch:*",
     "test:test-app": "yarn workspace test-app run test",
     "test:watch:test-app": "yarn workspace test-app run test:watch",
