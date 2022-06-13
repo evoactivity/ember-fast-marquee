@@ -1,3 +1,27 @@
+@import url('https://rsms.me/inter/inter.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html {
+  @apply font-sans-no-variation;
+  font-weight: 300;
+}
+
+@supports (font-variation-settings: normal) {
+  html {
+    @apply font-sans;
+  }
+}
+
+.logo {
+  margin: auto 80px auto 0;
+  padding: 16px;
+
+  svg {
+    width: auto;
+    height: 40px;
+    overflow: hidden;
+  }
+}

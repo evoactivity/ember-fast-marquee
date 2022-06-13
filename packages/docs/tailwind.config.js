@@ -12,17 +12,23 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['Petrona', ...defaultTheme.fontFamily.serif],
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        'sans-no-variation': ['Inter', ...defaultTheme.fontFamily.sans],
       },
       colors: {
-        'brand-blue': '#28dee1',
-        'brand-dark-blue': '#16273e',
-        'brand-orange': '#ee6243',
-        'brand-dark-orange': '#da5235',
-        'brand-light-grey': '#f2f7f8',
-        'brand-grey': '#a9a9aa',
-        'brand-green': '#d3faca',
+        'ember-orange': {
+          DEFAULT: '#E34C32',
+          50: '#FCE9E8',
+          100: '#F9D6D4',
+          200: '#F4B2AB',
+          300: '#EE8F83',
+          400: '#E96D5A',
+          500: '#E34C32',
+          600: '#CB391C',
+          700: '#A33016',
+          800: '#7B2611',
+          900: '#521B0B',
+        },
       },
     },
   },
