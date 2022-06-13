@@ -1,6 +1,7 @@
 import Modifier, { ArgsFor, PositionalArgs, NamedArgs } from 'ember-modifier';
 import { registerDestructor } from '@ember/destroyable';
 import type component from '../components/marquee';
+import { service } from '@ember/service';
 
 interface MarqueeModifierSignature {
   Args: {
@@ -23,7 +24,7 @@ interface MarqueeModifierSignature {
 
 function cleanup(instance: MarqueeModifier): void {
   if (instance.boundFn) {
-    window.removeEventListener('resize', instance.boundFn);
+    instance.resizeObserver.unobserve(instance.containerEl, instance.boundFn);
   }
   if (instance.listeningForResize) instance.listeningForResize = false;
 }
@@ -31,8 +32,11 @@ function cleanup(instance: MarqueeModifier): void {
 type MarqueeState = NamedArgs<MarqueeModifierSignature>;
 
 export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> {
+  @service resizeObserver!: any;
+
   boundFn?: (() => void) | null = null;
   component?: component;
+  containerEl?: HTMLDivElement;
   delay?: MarqueeState['delay'];
   direction?: MarqueeState['direction'];
   fillRow?: MarqueeState['fillRow'];
@@ -138,21 +142,20 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     this.play = play;
     this.rgbaGradientColor = rgbaGradientColor;
     this.speed = speed;
-
-    const containerEl = element;
+    this.containerEl = element;
     const marqueeEl = <HTMLDivElement>(
-      containerEl.querySelector('.' + marqueeSelector)
+      this.containerEl.querySelector('.' + marqueeSelector)
     );
 
-    this.measureAndSetCSSVariables(containerEl, marqueeEl);
+    this.measureAndSetCSSVariables(this.containerEl, marqueeEl);
 
     this.boundFn = this.measureAndSetCSSVariables.bind(
       this,
-      containerEl,
+      this.containerEl,
       marqueeEl
     );
     if (!this.listeningForResize) {
-      window.addEventListener('resize', this.boundFn);
+      this.resizeObserver.observe(this.containerEl, this.boundFn);
       this.listeningForResize = true;
     }
   }
