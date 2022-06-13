@@ -1,7 +1,7 @@
 .root {
-  overflow-x: hidden !important;
-  display: flex !important;
-  flex-direction: row !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
   position: relative;
   width: 100%;
   --fill-row: 100%;
@@ -9,8 +9,8 @@
 }
 
 .scroller {
-  display: flex !important;
-  flex-direction: row !important;
+  display: flex;
+  flex-direction: row;
   width: 100%;
   transform-style: preserve-3d;
   backface-visibility: hidden;
