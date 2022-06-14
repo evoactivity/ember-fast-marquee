@@ -26,6 +26,7 @@ interface MarqueeModifierSignature {
 function cleanup(instance: MarqueeModifier): void {
   if (instance.boundFn) {
     instance.resizeObserver.unobserve(instance.containerEl, instance.boundFn);
+    instance.resizeObserver.unobserve(instance.marqueeEl, instance.boundFn);
   }
   if (instance.listeningForResize) instance.listeningForResize = false;
 }
@@ -38,6 +39,7 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   boundFn?: (() => void) | null = null;
   component?: component;
   containerEl!: HTMLDivElement;
+  marqueeEl!: HTMLDivElement;
   delay?: MarqueeState['delay'];
   direction?: MarqueeState['direction'];
   fillRow?: MarqueeState['fillRow'];
@@ -144,19 +146,20 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     this.rgbaGradientColor = rgbaGradientColor;
     this.speed = speed;
     this.containerEl = element;
-    const marqueeEl = <HTMLDivElement>(
+    this.marqueeEl = <HTMLDivElement>(
       this.containerEl.querySelector('.' + marqueeSelector)
     );
 
-    this.measureAndSetCSSVariables(this.containerEl, marqueeEl);
+    this.measureAndSetCSSVariables(this.containerEl, this.marqueeEl);
 
     this.boundFn = this.measureAndSetCSSVariables.bind(
       this,
       this.containerEl,
-      marqueeEl
+      this.marqueeEl
     );
     if (!this.listeningForResize) {
       this.resizeObserver.observe(this.containerEl, this.boundFn);
+      this.resizeObserver.observe(this.marqueeEl, this.boundFn);
       this.listeningForResize = true;
     }
   }
