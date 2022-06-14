@@ -23,12 +23,19 @@
   <div
     class={{this.styles.scroller}}
     data-test-marquee-scroller
-    {{on 'animationiteration' this.onCycleComplete}}
-    {{on 'animationend' this.onFinish}}
+    {{observe-mutation
+      this.resetAnimations
+      childList=true
+      subtree=false
+      attributes=false
+      characterData=false
+    }}
   >
     <div
-      class='{{this.styles.marquee}}'
+      class={{this.styles.marquee}}
       data-test-marquee-marquee
+      {{on 'animationiteration' this.onCycleComplete}}
+      {{on 'animationend' this.onFinish}}
     >{{yield}}</div>
     {{#each this.repeater}}
       <div

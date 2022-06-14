@@ -12,29 +12,21 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform;
-  transform: translate3d(0, 0, 0);
-  animation: scroll var(--duration) linear var(--delay) var(--iteration-count);
-  animation-play-state: var(--play);
-  animation-delay: var(--delay);
-  animation-direction: var(--direction);
 }
 
-.root:active .scroller {
+.root:active .scroller .marquee {
   animation-play-state: var(--pause-on-click);
 }
 
-.root:hover .scroller {
+.root:hover .scroller .marquee {
   animation-play-state: var(--pause-on-hover);
 }
 
-.root[style*='--pause-on-click: paused']:hover:active .scroller {
+.root[style*='--pause-on-click: paused']:hover:active .scroller .marquee {
   animation-play-state: var(--pause-on-click);
 }
 
-.root[style*='--pause-on-hover: paused']:hover:active .scroller {
+.root[style*='--pause-on-hover: paused']:hover:active .scroller .marquee {
   animation-play-state: var(--pause-on-hover);
 }
 
@@ -78,6 +70,12 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  animation: scroll var(--duration) linear var(--delay) var(--iteration-count);
+  animation-play-state: var(--play);
+  animation-delay: var(--delay);
+  animation-direction: var(--direction);
 }
 
 @keyframes scroll {

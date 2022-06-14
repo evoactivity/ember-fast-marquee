@@ -94,6 +94,7 @@ export default class Marquee extends Component<MarqueeSignature> {
 
   @tracked containerWidth = 0;
   @tracked marqueeWidth = 0;
+  @tracked containerEl!: HTMLDivElement;
 
   get fillRow(): Getters['fillRow'] {
     return this.args.fillRow || false;
@@ -161,6 +162,26 @@ export default class Marquee extends Component<MarqueeSignature> {
   get repeater(): number[] {
     if (this.marqueeWidth >= this.containerWidth) return [0];
     return [...Array(Math.ceil(this.containerWidth / this.marqueeWidth))];
+  }
+
+  @action
+  resetAnimations(mutations: any[]): void {
+    for (const mutation of mutations) {
+      const nodes = [...mutation.addedNodes, ...mutation.removedNodes].filter(
+        (node) => node.className?.includes('marquee')
+      );
+      if (nodes.length > 0) {
+        const marqueeNodes = this.containerEl.querySelectorAll(
+          '.' + this.styles.marquee
+        );
+        const marquees = [...marqueeNodes];
+        marquees.forEach((marquee) => {
+          marquee.getAnimations().forEach((animation) => {
+            animation.startTime = 0;
+          });
+        });
+      }
+    }
   }
 
   @action

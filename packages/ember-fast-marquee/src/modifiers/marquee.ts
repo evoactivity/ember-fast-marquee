@@ -96,22 +96,22 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     setProp('--delay', `${this.delay}s`);
     setProp('--iteration-count', this.loop ? '' + this.loop : 'infinite');
 
-    this.component.containerWidth = containerEl.getBoundingClientRect().width;
-    this.component.marqueeWidth = marqueeEl.getBoundingClientRect().width;
+    const containerWidth = (this.component.containerWidth =
+      containerEl.getBoundingClientRect().width);
+    const marqueeWidth = (this.component.marqueeWidth =
+      marqueeEl.getBoundingClientRect().width);
 
     setProp(
       '--marquee-scroll-amount',
-      this.fillRow ||
-        this.component.containerWidth < this.component.marqueeWidth
-        ? `${this.component.marqueeWidth}px`
+      this.fillRow || containerWidth < marqueeWidth
+        ? `${marqueeWidth}px`
         : '100%'
     );
 
     const duration =
-      this.fillRow ||
-      this.component.containerWidth < this.component.marqueeWidth
-        ? this.component.marqueeWidth / this.speed
-        : this.component.containerWidth / this.speed;
+      this.fillRow || containerWidth < marqueeWidth
+        ? marqueeWidth / this.speed
+        : containerWidth / this.speed;
 
     setProp('--duration', `${duration}s`);
   }
@@ -145,20 +145,19 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     this.play = play;
     this.rgbaGradientColor = rgbaGradientColor;
     this.speed = speed;
-    this.containerEl = element;
+    this.component.containerEl = element;
     this.marqueeEl = <HTMLDivElement>(
-      this.containerEl.querySelector('.' + marqueeSelector)
+      this.component.containerEl.querySelector('.' + marqueeSelector)
     );
 
-    this.measureAndSetCSSVariables(this.containerEl, this.marqueeEl);
-
+    this.measureAndSetCSSVariables(this.component.containerEl, this.marqueeEl);
     this.boundFn = this.measureAndSetCSSVariables.bind(
       this,
-      this.containerEl,
+      this.component.containerEl,
       this.marqueeEl
     );
     if (!this.listeningForResize) {
-      this.resizeObserver.observe(this.containerEl, this.boundFn);
+      this.resizeObserver.observe(this.component.containerEl, this.boundFn);
       this.resizeObserver.observe(this.marqueeEl, this.boundFn);
       this.listeningForResize = true;
     }
