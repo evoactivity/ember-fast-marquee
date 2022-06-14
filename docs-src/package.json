@@ -11,7 +11,7 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "ember prerender --urls='/' --urls='/demo' --urls='/docs' --viewport-width=1920 && rm -rf ../../docs/ && cp -R ../../docs-template ../../docs && mv ./dist/* ../../docs/",
+    "build": "ember prerender --urls='/' --urls='/demo' --urls='/docs' --viewport-width=1920 && rm -rf ../docs/ && cp -R ../docs-template ../docs && mv ./dist/* ../docs/",
     "lint": "npm-run-all --aggregate-output --continue-on-error --parallel \"lint:!(fix)\"",
     "lint:fix": "npm-run-all --aggregate-output --continue-on-error --parallel lint:*:fix",
     "lint:hbs": "ember-template-lint .",
