@@ -1,7 +1,7 @@
 import Modifier, { ArgsFor, PositionalArgs, NamedArgs } from 'ember-modifier';
 import { registerDestructor } from '@ember/destroyable';
 import type component from '../components/marquee';
-import { service } from '@ember/service';
+import { inject as service } from '@ember/service';
 import type ResizeObserverService from 'ember-resize-observer-service/services/resize-observer';
 
 interface MarqueeModifierSignature {
