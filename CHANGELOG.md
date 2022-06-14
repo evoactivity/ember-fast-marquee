@@ -2,6 +2,16 @@
 
 
 
+
+## v0.1.7 (2022-06-14)
+
+#### :rocket: Enhancement
+* `ember-fast-marquee`
+  * [#18](https://github.com/evoactivity/ember-fast-marquee/pull/18) Use resize observer service instead of window resize ([@evoactivity](https://github.com/evoactivity))
+
+#### Committers: 1
+- Liam Potter ([@evoactivity](https://github.com/evoactivity))
+
 ## v0.1.6 (2022-06-01)
 
 #### :rocket: Enhancement
