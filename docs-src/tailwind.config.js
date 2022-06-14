@@ -13,7 +13,6 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-        'sans-no-variation': ['Inter', ...defaultTheme.fontFamily.sans],
       },
       colors: {
         'ember-orange': {

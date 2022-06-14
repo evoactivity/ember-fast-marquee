@@ -28,7 +28,7 @@
 </div>
 
 <div class='my-16'>
-  <Marquee @fillRow={{true}}>
+  <Marquee @gradient={{true}} @fillRow={{true}}>
     <span class='text-4xl font-bold mx-4 text-gray-500'>Welcome</span>
     <span class='text-4xl font-bold mx-4 text-gray-800'>Bienvenue</span>
     <span class='text-4xl font-bold mx-4 text-gray-500'>欢迎</span>
@@ -57,7 +57,7 @@
     <span class='text-4xl font-bold mx-4 text-gray-500'>καλως ΗΡΘΑΤΕ</span>
   </Marquee>
 
-  <Marquee @direction='right' class='my-16'>
+  <Marquee @fillRow={{true}} @direction='right' class='my-16'>
 
     <div
       class='mx-4 mb-1 relative overflow-hidden w-48 rounded-md shadow bg-gray-300'
@@ -480,5 +480,35 @@
 
     </div>
 
+  </Marquee>
+
+  <Marquee class='my-16'>
+    <div class='mx-auto'>Single element</div>
+  </Marquee>
+
+  <Marquee @fillRow={{true}} class='my-16'>
+    <div class='mx-1'>Single element set to fill row.</div>
+  </Marquee>
+
+  <Marquee @speed={{100}} class='my-16'>
+    <div class='mx-auto'>Speed set to 100 pixels per second</div>
+  </Marquee>
+
+  <Marquee @pauseOnHover={{true}} class='my-16'>
+    <div class='mx-auto'>This marquee will stop on hover</div>
+  </Marquee>
+
+  <Marquee @pauseOnClick={{true}} class='my-16'>
+    <div class='mx-auto'>This marquee will stop when you mousedown or tap and
+      hold</div>
+  </Marquee>
+
+  <Marquee
+    @gradient={{true}}
+    @gradientColor='255,0,0'
+    @gradientWidth='15%'
+    class='my-16'
+  >
+    <div class='mx-auto'>This marquee has a custom red gradient applied</div>
   </Marquee>
 </div>
