@@ -15,6 +15,9 @@ module.exports = {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
       colors: {
+        'ember-gray': {
+          900: '#1c1e24',
+        },
         'ember-orange': {
           DEFAULT: '#E34C32',
           50: '#FCE9E8',
