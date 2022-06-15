@@ -92,8 +92,7 @@ type Getters = WithoutNullableKeys<MarqueeSignature>;
 export default class Marquee extends Component<MarqueeSignature> {
   styles = styles;
 
-  @tracked containerWidth = 0;
-  @tracked marqueeWidth = 0;
+  @tracked repeater = [0];
 
   get fillRow(): Getters['fillRow'] {
     return this.args.fillRow || false;
@@ -152,15 +151,6 @@ export default class Marquee extends Component<MarqueeSignature> {
   get rgbaGradientColor(): string {
     const gc = this.gradientColor.split(',');
     return `rgba(${gc[0]}, ${gc[1]}, ${gc[2]}`;
-  }
-
-  // This is used to produce an array we can loop over in the template to output multiple
-  // {{yield}} blocks tagged with aria-hidden.
-  // If the marquee container is larger or the same size as the container, we only need one duplicate,
-  // otherwise always need at least 1 duplicate or we calculate how many to fill the space
-  get repeater(): number[] {
-    if (this.marqueeWidth >= this.containerWidth) return [0];
-    return [...Array(Math.ceil(this.containerWidth / this.marqueeWidth))];
   }
 
   @action

@@ -12,7 +12,6 @@ interface MarqueeModifierSignature {
       fillRow?: boolean;
       gradientWidth?: string;
       loop?: number;
-      marqueeSelector?: string;
       pauseOnClick?: boolean;
       pauseOnHover?: boolean;
       play?: boolean;
@@ -43,13 +42,13 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   fillRow?: MarqueeState['fillRow'];
   gradientWidth?: MarqueeState['gradientWidth'];
   loop?: MarqueeState['loop'];
-  marqueeSelector?: MarqueeState['marqueeSelector'];
   pauseOnClick?: MarqueeState['pauseOnClick'];
   pauseOnHover?: MarqueeState['pauseOnHover'];
   play?: MarqueeState['play'];
   rgbaGradientColor?: MarqueeState['rgbaGradientColor'];
   speed?: MarqueeState['speed'];
   listeningForResize = false;
+  numberOfDuplicatesNeeded = 1;
 
   constructor(owner: unknown, args: ArgsFor<MarqueeModifierSignature>) {
     super(owner, args);
@@ -73,6 +72,21 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
 
     const containerWidth = this.containerEl.getBoundingClientRect().width;
     const marqueeWidth = this.marqueeEl.getBoundingClientRect().width;
+
+    if (marqueeWidth < containerWidth) {
+      // This is used to produce an array we can loop over in the template to output multiple
+      // {{yield}} blocks tagged with aria-hidden.
+      // As a marquee scrolls the duplicates are what fill in the space, we always need at least one duplicate.
+      // By default a marquee will be 100% width matching the container, but if the fillRow option is used
+      // our marquee will be as wide as it's contents, this means we need to calculate the number of duplicates
+      // needed to fill in the white space.
+
+      const numberOfDuplicatesNeeded = Math.ceil(containerWidth / marqueeWidth);
+      if (this.numberOfDuplicatesNeeded !== numberOfDuplicatesNeeded) {
+        this.numberOfDuplicatesNeeded = numberOfDuplicatesNeeded;
+        this.component.repeater = [...Array(numberOfDuplicatesNeeded)];
+      }
+    }
 
     const duration =
       (this.fillRow || containerWidth < marqueeWidth
@@ -114,7 +128,6 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
       fillRow,
       gradientWidth,
       loop,
-      marqueeSelector,
       pauseOnClick,
       pauseOnHover,
       play,
@@ -125,14 +138,13 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     this.component = componentContext;
     this.containerEl = element;
     this.marqueeEl = <HTMLDivElement>(
-      this.containerEl.querySelector('.' + marqueeSelector)
+      this.containerEl.querySelector('.' + this.component.styles.marquee)
     );
     this.delay = delay;
     this.direction = direction;
     this.fillRow = fillRow;
     this.gradientWidth = gradientWidth;
     this.loop = loop;
-    this.marqueeSelector = marqueeSelector;
     this.pauseOnClick = pauseOnClick;
     this.pauseOnHover = pauseOnHover;
     this.play = play;
