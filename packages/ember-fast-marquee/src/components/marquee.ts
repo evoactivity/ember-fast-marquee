@@ -154,11 +154,11 @@ export default class Marquee extends Component<MarqueeSignature> {
 
   @action
   onFinish(): void {
-    if (this.args.onFinish) this.args.onFinish();
+    this.args.onFinish?.();
   }
 
   @action
   onCycleComplete(): void {
-    if (this.args.onCycleComplete) this.args.onCycleComplete();
+    this.args.onCycleComplete?.();
   }
 }
