@@ -23,12 +23,10 @@ interface MarqueeModifierSignature {
 }
 
 function cleanup(instance: MarqueeModifier): void {
-  if (instance.boundFn) {
-    instance.resizeObserver.unobserve(instance.containerEl, instance.boundFn);
-    instance.resizeObserver.unobserve(instance.marqueeEl, instance.boundFn);
-    instance.mutationObserver.disconnect();
-  }
-  if (instance.observingDomChanges) instance.observingDomChanges = false;
+  instance.resizeObserver.unobserve(instance.containerEl, instance.boundFn);
+  instance.resizeObserver.unobserve(instance.marqueeEl, instance.boundFn);
+  instance.mutationObserver.disconnect();
+  instance.observingDomChanges = false;
 }
 
 type MarqueeState = NamedArgs<MarqueeModifierSignature>;
@@ -37,7 +35,7 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   @service resizeObserver!: ResizeObserverService;
   mutationObserver!: MutationObserver;
 
-  boundFn?: () => void;
+  boundFn!: () => void;
   component!: component;
   containerEl!: HTMLDivElement;
   marqueeEl!: HTMLDivElement;
@@ -137,25 +135,32 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   // elements are added and removed (even outside of embers control) and reset all
   // the animations in the row so they start at the same point
   resetAnimations(mutations: MutationRecord[]): void {
+    let nodes: Node[] = [];
     mutations.forEach((mutation) => {
       // we only care about marquee elements
-      // exit early if we have none
-      const nodes = [...mutation.addedNodes, ...mutation.removedNodes].filter(
+      // being added or removed
+      // we exit early if we have none
+      const nodesList = [
+        ...mutation.addedNodes,
+        ...mutation.removedNodes,
+      ].filter(
         (node: Node) =>
           node.nodeName === 'DIV' &&
           (<HTMLDivElement>node).className.includes('marquee')
       );
 
-      if (nodes.length === 0) return;
+      nodes = [...nodes, ...nodesList];
+    });
 
-      const marqueeNodes = this.containerEl.querySelectorAll(
-        '.' + this.component.styles.marquee
-      );
+    if (nodes.length === 0) return;
 
-      marqueeNodes.forEach((marquee) => {
-        marquee.getAnimations().forEach((animation) => {
-          animation.startTime = 0;
-        });
+    const marqueeNodes = this.containerEl.querySelectorAll(
+      '.' + this.component.styles.marquee
+    );
+
+    marqueeNodes.forEach((marquee) => {
+      marquee.getAnimations().forEach((animation) => {
+        animation.startTime = 0;
       });
     });
   }
