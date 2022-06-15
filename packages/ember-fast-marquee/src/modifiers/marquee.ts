@@ -53,18 +53,17 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   rgbaGradientColor?: MarqueeState['rgbaGradientColor'];
   speed?: MarqueeState['speed'];
 
+  numberOfDupicatesNeeded = 1;
+
   constructor(owner: unknown, args: ArgsFor<MarqueeModifierSignature>) {
     super(owner, args);
     registerDestructor(this, cleanup);
   }
 
-  measureAndSetCSSVariables(
-    containerEl: HTMLDivElement,
-    marqueeEl: HTMLDivElement
-  ): void {
+  measureAndSetCSSVariables(): void {
     if (
-      !marqueeEl ||
-      !containerEl ||
+      !this.marqueeEl ||
+      !this.containerEl ||
       !this.component ||
       !this.speed ||
       !this.gradientWidth
@@ -72,9 +71,11 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
       return;
     }
 
-    const setProp = containerEl.style.setProperty.bind(containerEl.style);
-    const containerWidth = containerEl.getBoundingClientRect().width;
-    const marqueeWidth = marqueeEl.getBoundingClientRect().width;
+    const setProp = this.containerEl.style.setProperty.bind(
+      this.containerEl.style
+    );
+    const containerWidth = this.containerEl.getBoundingClientRect().width;
+    const marqueeWidth = this.marqueeEl.getBoundingClientRect().width;
 
     if (marqueeWidth < containerWidth) {
       // This is used to produce an array we can loop over in the template to output multiple
@@ -83,9 +84,12 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
       // By default a marquee will be 100% width matching the container, but if the fillRow options is used
       // our marquee will be as wide as it's contents, this means we need to calculate the number of duplicates
       // needed to fill in the white space.
-      this.component.repeater = [
-        ...Array(Math.ceil(containerWidth / marqueeWidth)),
-      ];
+
+      const numberOfDupicatesNeeded = Math.ceil(containerWidth / marqueeWidth);
+      if (this.numberOfDupicatesNeeded !== numberOfDupicatesNeeded) {
+        this.numberOfDupicatesNeeded = numberOfDupicatesNeeded;
+        this.component.repeater = [...Array(numberOfDupicatesNeeded)];
+      }
     }
 
     const duration =
@@ -118,6 +122,20 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     );
 
     setProp('--play', this.play ? 'running' : 'paused');
+
+    const marqueeNodes = this.containerEl.querySelectorAll(
+      '.' + this.component.styles.marquee
+    );
+
+    marqueeNodes.forEach((marquee) => {
+      marquee.getAnimations().forEach((animation) => {
+        if (this.play) {
+          animation.play();
+        } else {
+          animation.pause();
+        }
+      });
+    });
 
     setProp('--direction', this.direction === 'left' ? 'normal' : 'reverse');
 
@@ -160,7 +178,13 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
 
     marqueeNodes.forEach((marquee) => {
       marquee.getAnimations().forEach((animation) => {
+        const oldState = animation.playState;
         animation.startTime = 0;
+        if (oldState === 'running') {
+          animation.play();
+        } else {
+          animation.pause();
+        }
       });
     });
   }
@@ -200,12 +224,10 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     this.rgbaGradientColor = rgbaGradientColor;
     this.speed = speed;
 
+    this.measureAndSetCSSVariables();
+
     if (!this.observingDomChanges) {
-      this.boundFn = this.measureAndSetCSSVariables.bind(
-        this,
-        this.containerEl,
-        this.marqueeEl
-      );
+      this.boundFn = this.measureAndSetCSSVariables.bind(this);
       this.boundFn();
       this.resizeObserver.observe(this.containerEl, this.boundFn);
       this.resizeObserver.observe(this.marqueeEl, this.boundFn);
@@ -219,6 +241,8 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
         characterData: false,
       });
       this.observingDomChanges = true;
+      // without this safari calculates the wrong animation for the first marquee
+      this.scrollerEl.classList.add(this.component.styles.scroll);
     }
   }
 }

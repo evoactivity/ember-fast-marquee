@@ -20,18 +20,18 @@ module('Marquee', function (hooks) {
     abc
     </Marquee>`);
 
-    const scroller = getComputedStyle(
+    const marquee = getComputedStyle(
       this.element.querySelector('[data-test-marquee-marquee]')
     );
 
-    let playState = scroller.getPropertyValue('animation-play-state');
+    const playState = marquee.getPropertyValue('animation-play-state');
 
     assert.strictEqual(playState, 'paused');
     this.set('play', true);
 
-    playState = scroller.getPropertyValue('animation-play-state');
+    const playState2 = marquee.getPropertyValue('animation-play-state');
 
-    assert.strictEqual(playState, 'running');
+    assert.strictEqual(playState2, 'running');
   });
 
   test('Duplicated rows are aria-hidden', async function (assert) {
@@ -197,11 +197,10 @@ module('Marquee', function (hooks) {
     // A container of 400px will have 2 content boxes each 400px each
     // resulting in a scroll container 800px wide.
     //
-    // [                           800px                           ]
-    // [            400px           ] [            400px           ]
-    // -------------------------------------------------------------
-    // |                             |                             |
-    // -------------------------------------------------------------
+    // [                               800px                               ]
+    // ---------------------------------------------------------------------
+    // |              400px              |              400px              |
+    // ---------------------------------------------------------------------
     //
     // The scroll container will be moved 400px to the left to complete a cycle
     // width / speed = duration in seconds
@@ -260,8 +259,8 @@ module('Marquee', function (hooks) {
 
     assert.strictEqual(scroller.getPropertyValue('--gradient-width'), '10%');
 
-    this.set('gradientWidth', '10px');
+    this.set('gradientWidth', '15px');
 
-    assert.strictEqual(scroller.getPropertyValue('--gradient-width'), '10px');
+    assert.strictEqual(scroller.getPropertyValue('--gradient-width'), '15px');
   });
 });
