@@ -24,11 +24,9 @@ interface MarqueeModifierSignature {
 }
 
 function cleanup(instance: MarqueeModifier): void {
-  if (instance.boundFn) {
-    instance.resizeObserver.unobserve(instance.containerEl, instance.boundFn);
-    instance.resizeObserver.unobserve(instance.marqueeEl, instance.boundFn);
-  }
-  if (instance.listeningForResize) instance.listeningForResize = false;
+  instance.resizeObserver.unobserve(instance.containerEl, instance.boundFn);
+  instance.resizeObserver.unobserve(instance.marqueeEl, instance.boundFn);
+  instance.listeningForResize = false;
 }
 
 type MarqueeState = NamedArgs<MarqueeModifierSignature>;
@@ -36,7 +34,7 @@ type MarqueeState = NamedArgs<MarqueeModifierSignature>;
 export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> {
   @service resizeObserver!: ResizeObserverService;
 
-  boundFn?: (() => void) | null = null;
+  boundFn!: () => void;
   component?: component;
   containerEl!: HTMLDivElement;
   marqueeEl!: HTMLDivElement;
@@ -58,13 +56,10 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     registerDestructor(this, cleanup);
   }
 
-  measureAndSetCSSVariables(
-    containerEl: HTMLDivElement,
-    marqueeEl: HTMLDivElement
-  ): void {
+  measureAndSetCSSVariables(): void {
     if (
-      !marqueeEl ||
-      !containerEl ||
+      !this.marqueeEl ||
+      !this.containerEl ||
       !this.component ||
       !this.speed ||
       !this.gradientWidth
@@ -72,48 +67,42 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
       return;
     }
 
-    const setProp = containerEl.style.setProperty.bind(containerEl.style);
-
-    setProp('--fill-row', this.fillRow ? 'max-content' : '100%');
-    setProp(
-      '--gradient-color',
-      `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`
+    const setProp = this.containerEl.style.setProperty.bind(
+      this.containerEl.style
     );
 
-    setProp('--gradient-width', this.gradientWidth);
-
-    setProp(
-      '--pause-on-hover',
-      !this.play ? 'paused' : this.pauseOnHover ? 'paused' : 'running'
-    );
-    setProp(
-      '--pause-on-click',
-      !this.play ? 'paused' : this.pauseOnClick ? 'paused' : 'running'
-    );
-    setProp('--play', this.play ? 'running' : 'paused');
-    setProp('--direction', this.direction === 'left' ? 'normal' : 'reverse');
-
-    setProp('--delay', `${this.delay}s`);
-    setProp('--iteration-count', this.loop ? '' + this.loop : 'infinite');
-
-    this.component.containerWidth = containerEl.getBoundingClientRect().width;
-    this.component.marqueeWidth = marqueeEl.getBoundingClientRect().width;
-
-    setProp(
-      '--marquee-scroll-amount',
-      this.fillRow ||
-        this.component.containerWidth < this.component.marqueeWidth
-        ? `${this.component.marqueeWidth}px`
-        : '100%'
-    );
+    const containerWidth = this.containerEl.getBoundingClientRect().width;
+    const marqueeWidth = this.marqueeEl.getBoundingClientRect().width;
 
     const duration =
-      this.fillRow ||
-      this.component.containerWidth < this.component.marqueeWidth
-        ? this.component.marqueeWidth / this.speed
-        : this.component.containerWidth / this.speed;
+      (this.fillRow || containerWidth < marqueeWidth
+        ? marqueeWidth / this.speed
+        : containerWidth / this.speed) + 's';
 
-    setProp('--duration', `${duration}s`);
+    const scrollAmount =
+      this.fillRow || containerWidth < marqueeWidth
+        ? `${marqueeWidth}px`
+        : '100%';
+
+    const fillRow = this.fillRow ? 'max-content' : '100%';
+    const gradientColor = `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`;
+    const play = this.play ? 'running' : 'paused';
+    const pauseOnHover = this.pauseOnHover ? 'paused' : play;
+    const pauseOnClick = this.pauseOnClick ? 'paused' : play;
+    const direction = this.direction === 'left' ? 'normal' : 'reverse';
+    const iterationCount = this.loop ? '' + this.loop : 'infinite';
+
+    setProp('--fill-row', fillRow);
+    setProp('--gradient-color', gradientColor);
+    setProp('--gradient-width', this.gradientWidth);
+    setProp('--pause-on-hover', pauseOnHover);
+    setProp('--pause-on-click', pauseOnClick);
+    setProp('--play', play);
+    setProp('--direction', direction);
+    setProp('--delay', `${this.delay}s`);
+    setProp('--iteration-count', iterationCount);
+    setProp('--marquee-scroll-amount', scrollAmount);
+    setProp('--duration', duration);
   }
 
   modify(
@@ -134,6 +123,10 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     }: NamedArgs<MarqueeModifierSignature>
   ): void {
     this.component = componentContext;
+    this.containerEl = element;
+    this.marqueeEl = <HTMLDivElement>(
+      this.containerEl.querySelector('.' + marqueeSelector)
+    );
     this.delay = delay;
     this.direction = direction;
     this.fillRow = fillRow;
@@ -145,19 +138,11 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     this.play = play;
     this.rgbaGradientColor = rgbaGradientColor;
     this.speed = speed;
-    this.containerEl = element;
-    this.marqueeEl = <HTMLDivElement>(
-      this.containerEl.querySelector('.' + marqueeSelector)
-    );
 
-    this.measureAndSetCSSVariables(this.containerEl, this.marqueeEl);
+    this.measureAndSetCSSVariables();
 
-    this.boundFn = this.measureAndSetCSSVariables.bind(
-      this,
-      this.containerEl,
-      this.marqueeEl
-    );
     if (!this.listeningForResize) {
+      this.boundFn = this.measureAndSetCSSVariables.bind(this);
       this.resizeObserver.observe(this.containerEl, this.boundFn);
       this.resizeObserver.observe(this.marqueeEl, this.boundFn);
       this.listeningForResize = true;
