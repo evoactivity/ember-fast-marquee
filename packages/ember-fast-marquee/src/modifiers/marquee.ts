@@ -70,6 +70,24 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
       this.containerEl.style
     );
 
+    const fillRow = this.fillRow ? 'max-content' : '100%';
+    const gradientColor = `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`;
+    const play = this.play ? 'running' : 'paused';
+    const pauseOnHover = this.pauseOnHover ? 'paused' : play;
+    const pauseOnClick = this.pauseOnClick ? 'paused' : play;
+    const direction = this.direction === 'left' ? 'normal' : 'reverse';
+    const iterationCount = this.loop ? '' + this.loop : 'infinite';
+
+    setProp('--gradient-color', gradientColor);
+    setProp('--gradient-width', this.gradientWidth);
+    setProp('--pause-on-hover', pauseOnHover);
+    setProp('--pause-on-click', pauseOnClick);
+    setProp('--play', play);
+    setProp('--direction', direction);
+    setProp('--delay', `${this.delay}s`);
+    setProp('--iteration-count', iterationCount);
+    setProp('--fill-row', fillRow);
+
     const containerWidth = this.containerEl.getBoundingClientRect().width;
     const marqueeWidth = this.marqueeEl.getBoundingClientRect().width;
 
@@ -98,23 +116,6 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
         ? `${marqueeWidth}px`
         : '100%';
 
-    const fillRow = this.fillRow ? 'max-content' : '100%';
-    const gradientColor = `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`;
-    const play = this.play ? 'running' : 'paused';
-    const pauseOnHover = this.pauseOnHover ? 'paused' : play;
-    const pauseOnClick = this.pauseOnClick ? 'paused' : play;
-    const direction = this.direction === 'left' ? 'normal' : 'reverse';
-    const iterationCount = this.loop ? '' + this.loop : 'infinite';
-
-    setProp('--fill-row', fillRow);
-    setProp('--gradient-color', gradientColor);
-    setProp('--gradient-width', this.gradientWidth);
-    setProp('--pause-on-hover', pauseOnHover);
-    setProp('--pause-on-click', pauseOnClick);
-    setProp('--play', play);
-    setProp('--direction', direction);
-    setProp('--delay', `${this.delay}s`);
-    setProp('--iteration-count', iterationCount);
     setProp('--marquee-scroll-amount', scrollAmount);
     setProp('--duration', duration);
   }
