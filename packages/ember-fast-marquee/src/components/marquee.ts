@@ -137,19 +137,18 @@ export default class Marquee extends Component<MarqueeSignature> {
     return this.args.gradientColor || '255, 255, 255';
   }
 
-  // If the value we receive is a number use it as a percentage,
-  // if we receive a string, use that as is for the value
   get gradientWidth(): string {
-    const width = this.args.gradientWidth
-      ? typeof this.args.gradientWidth === 'number'
-        ? `${this.args.gradientWidth}%`
-        : <string>this.args.gradientWidth
-      : null;
-    return width || '5%';
+    if (this.args.gradientWidth) {
+      if (typeof this.args.gradientWidth === 'number') {
+        return `${this.args.gradientWidth}%`;
+      }
+      return this.args.gradientWidth;
+    }
+    return '5%';
   }
 
   get rgbaGradientColor(): string {
-    const gc = this.gradientColor.split(',');
+    const gc = this.gradientColor.split(',').map((x) => x.trim());
     return `rgba(${gc[0]}, ${gc[1]}, ${gc[2]}`;
   }
 
