@@ -23,12 +23,9 @@
   content: '';
   position: absolute;
   top: 0;
-  background: linear-gradient(
-    to right,
-    var(--gradient-color, 'rgba(255,255,255, 1), rgba(255,255,255, 0)')
-  );
+  background: linear-gradient(to right, var(--gradient-color));
   height: 100%;
-  width: var(--gradient-width, 5%);
+  width: var(--gradient-width);
   z-index: 2;
 }
 
@@ -42,17 +39,16 @@
 
 .marquee {
   flex: 0 0 auto;
-  min-width: var(--fill-row, 100%);
+  min-width: var(--fill-row);
   z-index: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
   transform: translateX(0);
-  animation: scroll var(--duration, 10s) linear var(--delay, 0)
-    var(--iteration-count, infinite);
-  animation-play-state: var(--play, running);
-  animation-delay: var(--delay, 0);
-  animation-direction: var(--direction, forwards);
+  animation: scroll var(--duration) linear var(--delay) var(--iteration-count);
+  animation-play-state: var(--play);
+  animation-delay: var(--delay);
+  animation-direction: var(--direction);
 }
 
 @keyframes scroll {
