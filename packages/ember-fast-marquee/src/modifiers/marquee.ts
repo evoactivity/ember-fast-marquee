@@ -75,11 +75,20 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     }
 
     const setProp = containerEl.style.setProperty.bind(containerEl.style);
-    const containerWidth = (this.component.containerWidth =
-      containerEl.getBoundingClientRect().width);
+    const containerWidth = containerEl.getBoundingClientRect().width;
+    const marqueeWidth = marqueeEl.getBoundingClientRect().width;
 
-    const marqueeWidth = (this.component.marqueeWidth =
-      marqueeEl.getBoundingClientRect().width);
+    if (marqueeWidth < containerWidth) {
+      // This is used to produce an array we can loop over in the template to output multiple
+      // {{yield}} blocks tagged with aria-hidden.
+      // As a marquee scrolls the duplicates are what fill in the space, we always need at least one duplicate.
+      // By default a marquee will be 100% width matching the container, but if the fillRow options is used
+      // our marquee will be as wide as it's contents, this means we need to calculate the number of duplicates
+      // needed to fill in the white space.
+      this.component.repeater = [
+        ...Array(Math.ceil(containerWidth / marqueeWidth)),
+      ];
+    }
 
     const duration =
       (this.fillRow || containerWidth < marqueeWidth
@@ -186,12 +195,12 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     this.rgbaGradientColor = rgbaGradientColor;
     this.speed = speed;
 
-    this.measureAndSetCSSVariables(this.containerEl, this.marqueeEl);
     this.boundFn = this.measureAndSetCSSVariables.bind(
       this,
       this.containerEl,
       this.marqueeEl
     );
+    this.boundFn();
     if (!this.observingDomChanges) {
       this.resizeObserver.observe(this.containerEl, this.boundFn);
       this.resizeObserver.observe(this.marqueeEl, this.boundFn);

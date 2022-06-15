@@ -92,17 +92,18 @@ type Getters = WithoutNullableKeys<MarqueeSignature>;
 export default class Marquee extends Component<MarqueeSignature> {
   styles = styles;
 
-  // these are updated by the marquee modifier
-  // which handles measuring and updating css variables
-  // we use these in a calculation used for rendering
-  @tracked containerWidth = 0;
-  @tracked marqueeWidth = 0;
+  @tracked repeater = [0];
 
   get fillRow(): Getters['fillRow'] {
     return this.args.fillRow || false;
   }
 
   get play(): Getters['play'] {
+    // by default this should be true
+    // return play || true would not work
+    // since if play=false it becomes
+    // return false || true
+    // meaning it cannot be paused
     if (typeof this.args.play === 'undefined') {
       return true;
     }
@@ -154,17 +155,6 @@ export default class Marquee extends Component<MarqueeSignature> {
   get rgbaGradientColor(): string {
     const gc = this.gradientColor.split(',');
     return `rgba(${gc[0]}, ${gc[1]}, ${gc[2]}`;
-  }
-
-  // This is used to produce an array we can loop over in the template to output multiple
-  // {{yield}} blocks tagged with aria-hidden.
-  // As a marquee scrolls the duplicates are what fill in the space, we always need at least one duplicate.
-  // By default a marquee will be 100% width matching the container, but if the fillRow options is used
-  // our marquee will be as wide as it's contents, this means we need to calculate the number of duplicates
-  // needed to fill in the white space.
-  get repeater(): number[] {
-    if (this.marqueeWidth >= this.containerWidth) return [0];
-    return [...Array(Math.ceil(this.containerWidth / this.marqueeWidth))];
   }
 
   @action
