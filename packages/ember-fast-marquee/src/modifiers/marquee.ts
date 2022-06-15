@@ -200,13 +200,13 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     this.rgbaGradientColor = rgbaGradientColor;
     this.speed = speed;
 
-    this.boundFn = this.measureAndSetCSSVariables.bind(
-      this,
-      this.containerEl,
-      this.marqueeEl
-    );
-    this.boundFn();
     if (!this.observingDomChanges) {
+      this.boundFn = this.measureAndSetCSSVariables.bind(
+        this,
+        this.containerEl,
+        this.marqueeEl
+      );
+      this.boundFn();
       this.resizeObserver.observe(this.containerEl, this.boundFn);
       this.resizeObserver.observe(this.marqueeEl, this.boundFn);
       this.mutationObserver = new MutationObserver(
