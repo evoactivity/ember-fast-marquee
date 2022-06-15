@@ -12,7 +12,6 @@ interface MarqueeModifierSignature {
       fillRow?: boolean;
       gradientWidth?: string;
       loop?: number;
-      marqueeSelector?: string;
       pauseOnClick?: boolean;
       pauseOnHover?: boolean;
       play?: boolean;
@@ -27,31 +26,34 @@ function cleanup(instance: MarqueeModifier): void {
   if (instance.boundFn) {
     instance.resizeObserver.unobserve(instance.containerEl, instance.boundFn);
     instance.resizeObserver.unobserve(instance.marqueeEl, instance.boundFn);
+    instance.mutationObserver.disconnect();
   }
-  if (instance.listeningForResize) instance.listeningForResize = false;
+  if (instance.observingDomChanges) instance.observingDomChanges = false;
 }
 
 type MarqueeState = NamedArgs<MarqueeModifierSignature>;
 
 export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> {
   @service resizeObserver!: ResizeObserverService;
+  mutationObserver!: MutationObserver;
 
-  boundFn?: (() => void) | null = null;
-  component?: component;
+  boundFn?: () => void;
+  component!: component;
   containerEl!: HTMLDivElement;
   marqueeEl!: HTMLDivElement;
+  scrollerEl!: HTMLDivElement;
+  observingDomChanges = false;
+
   delay?: MarqueeState['delay'];
   direction?: MarqueeState['direction'];
   fillRow?: MarqueeState['fillRow'];
   gradientWidth?: MarqueeState['gradientWidth'];
   loop?: MarqueeState['loop'];
-  marqueeSelector?: MarqueeState['marqueeSelector'];
   pauseOnClick?: MarqueeState['pauseOnClick'];
   pauseOnHover?: MarqueeState['pauseOnHover'];
   play?: MarqueeState['play'];
   rgbaGradientColor?: MarqueeState['rgbaGradientColor'];
   speed?: MarqueeState['speed'];
-  listeningForResize = false;
 
   constructor(owner: unknown, args: ArgsFor<MarqueeModifierSignature>) {
     super(owner, args);
@@ -73,8 +75,24 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     }
 
     const setProp = containerEl.style.setProperty.bind(containerEl.style);
+    const containerWidth = (this.component.containerWidth =
+      containerEl.getBoundingClientRect().width);
+
+    const marqueeWidth = (this.component.marqueeWidth =
+      marqueeEl.getBoundingClientRect().width);
+
+    const duration =
+      (this.fillRow || containerWidth < marqueeWidth
+        ? marqueeWidth / this.speed
+        : containerWidth / this.speed) + 's';
+
+    const scrollAmount =
+      this.fillRow || containerWidth < marqueeWidth
+        ? `${marqueeWidth}px`
+        : '100%';
 
     setProp('--fill-row', this.fillRow ? 'max-content' : '100%');
+
     setProp(
       '--gradient-color',
       `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`
@@ -86,34 +104,51 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
       '--pause-on-hover',
       !this.play ? 'paused' : this.pauseOnHover ? 'paused' : 'running'
     );
+
     setProp(
       '--pause-on-click',
       !this.play ? 'paused' : this.pauseOnClick ? 'paused' : 'running'
     );
+
     setProp('--play', this.play ? 'running' : 'paused');
+
     setProp('--direction', this.direction === 'left' ? 'normal' : 'reverse');
 
     setProp('--delay', `${this.delay}s`);
+
     setProp('--iteration-count', this.loop ? '' + this.loop : 'infinite');
 
-    const containerWidth = (this.component.containerWidth =
-      containerEl.getBoundingClientRect().width);
-    const marqueeWidth = (this.component.marqueeWidth =
-      marqueeEl.getBoundingClientRect().width);
+    setProp('--marquee-scroll-amount', scrollAmount);
 
-    setProp(
-      '--marquee-scroll-amount',
-      this.fillRow || containerWidth < marqueeWidth
-        ? `${marqueeWidth}px`
-        : '100%'
-    );
+    setProp('--duration', duration);
+  }
 
-    const duration =
-      this.fillRow || containerWidth < marqueeWidth
-        ? marqueeWidth / this.speed
-        : containerWidth / this.speed;
+  // as duplicates are added or removed the animation of the marquee element
+  // will start at different times, we use a mutation observer to tell when these
+  // elements are added and removed (even outside of embers control) and reset all
+  // the animations in the row so they start at the same point
+  resetAnimations(mutations: MutationRecord[]): void {
+    mutations.forEach((mutation) => {
+      // we only care about marquee elements
+      // exit early if we have none
+      const nodes = [...mutation.addedNodes, ...mutation.removedNodes].filter(
+        (node: Node) =>
+          node.nodeName === 'DIV' &&
+          (<HTMLDivElement>node).className.includes('marquee')
+      );
 
-    setProp('--duration', `${duration}s`);
+      if (nodes.length === 0) return;
+
+      const marqueeNodes = this.containerEl.querySelectorAll(
+        '.' + this.component.styles.marquee
+      );
+
+      marqueeNodes.forEach((marquee) => {
+        marquee.getAnimations().forEach((animation) => {
+          animation.startTime = 0;
+        });
+      });
+    });
   }
 
   modify(
@@ -125,7 +160,6 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
       fillRow,
       gradientWidth,
       loop,
-      marqueeSelector,
       pauseOnClick,
       pauseOnHover,
       play,
@@ -134,32 +168,43 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     }: NamedArgs<MarqueeModifierSignature>
   ): void {
     this.component = componentContext;
+    this.containerEl = element;
+    this.marqueeEl = <HTMLDivElement>(
+      this.containerEl.querySelector('.' + this.component.styles.marquee)
+    );
+    this.scrollerEl = <HTMLDivElement>(
+      this.containerEl.querySelector('.' + this.component.styles.scroller)
+    );
     this.delay = delay;
     this.direction = direction;
     this.fillRow = fillRow;
     this.gradientWidth = gradientWidth;
     this.loop = loop;
-    this.marqueeSelector = marqueeSelector;
     this.pauseOnClick = pauseOnClick;
     this.pauseOnHover = pauseOnHover;
     this.play = play;
     this.rgbaGradientColor = rgbaGradientColor;
     this.speed = speed;
-    this.component.containerEl = element;
-    this.marqueeEl = <HTMLDivElement>(
-      this.component.containerEl.querySelector('.' + marqueeSelector)
-    );
 
-    this.measureAndSetCSSVariables(this.component.containerEl, this.marqueeEl);
+    this.measureAndSetCSSVariables(this.containerEl, this.marqueeEl);
     this.boundFn = this.measureAndSetCSSVariables.bind(
       this,
-      this.component.containerEl,
+      this.containerEl,
       this.marqueeEl
     );
-    if (!this.listeningForResize) {
-      this.resizeObserver.observe(this.component.containerEl, this.boundFn);
+    if (!this.observingDomChanges) {
+      this.resizeObserver.observe(this.containerEl, this.boundFn);
       this.resizeObserver.observe(this.marqueeEl, this.boundFn);
-      this.listeningForResize = true;
+      this.mutationObserver = new MutationObserver(
+        this.resetAnimations.bind(this)
+      );
+      this.mutationObserver.observe(this.scrollerEl, {
+        childList: true,
+        subtree: false,
+        attributes: false,
+        characterData: false,
+      });
+      this.observingDomChanges = true;
     }
   }
 }

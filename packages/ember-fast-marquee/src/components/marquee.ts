@@ -92,9 +92,11 @@ type Getters = WithoutNullableKeys<MarqueeSignature>;
 export default class Marquee extends Component<MarqueeSignature> {
   styles = styles;
 
+  // these are updated by the marquee modifier
+  // which handles measuring and updating css variables
+  // we use these in a calculation used for rendering
   @tracked containerWidth = 0;
   @tracked marqueeWidth = 0;
-  @tracked containerEl!: HTMLDivElement;
 
   get fillRow(): Getters['fillRow'] {
     return this.args.fillRow || false;
@@ -139,15 +141,14 @@ export default class Marquee extends Component<MarqueeSignature> {
     return this.args.gradientColor || '255, 255, 255';
   }
 
-  // If the value we receive is a number use it as a percentage,
-  // if we receive a string, use that as is for the value
   get gradientWidth(): string {
-    const width = this.args.gradientWidth
-      ? typeof this.args.gradientWidth === 'number'
-        ? `${this.args.gradientWidth}%`
-        : <string>this.args.gradientWidth
-      : null;
-    return width || '5%';
+    if (this.args.gradientWidth) {
+      if (typeof this.args.gradientWidth === 'number') {
+        return `${this.args.gradientWidth}%`;
+      }
+      return this.args.gradientWidth;
+    }
+    return '5%';
   }
 
   get rgbaGradientColor(): string {
@@ -157,40 +158,22 @@ export default class Marquee extends Component<MarqueeSignature> {
 
   // This is used to produce an array we can loop over in the template to output multiple
   // {{yield}} blocks tagged with aria-hidden.
-  // If the marquee container is larger or the same size as the container, we only need one duplicate,
-  // otherwise always need at least 1 duplicate or we calculate how many to fill the space
+  // As a marquee scrolls the duplicates are what fill in the space, we always need at least one duplicate.
+  // By default a marquee will be 100% width matching the container, but if the fillRow options is used
+  // our marquee will be as wide as it's contents, this means we need to calculate the number of duplicates
+  // needed to fill in the white space.
   get repeater(): number[] {
     if (this.marqueeWidth >= this.containerWidth) return [0];
     return [...Array(Math.ceil(this.containerWidth / this.marqueeWidth))];
   }
 
   @action
-  resetAnimations(mutations: any[]): void {
-    for (const mutation of mutations) {
-      const nodes = [...mutation.addedNodes, ...mutation.removedNodes].filter(
-        (node) => node.className?.includes('marquee')
-      );
-      if (nodes.length > 0) {
-        const marqueeNodes = this.containerEl.querySelectorAll(
-          '.' + this.styles.marquee
-        );
-        const marquees = [...marqueeNodes];
-        marquees.forEach((marquee) => {
-          marquee.getAnimations().forEach((animation) => {
-            animation.startTime = 0;
-          });
-        });
-      }
-    }
-  }
-
-  @action
   onFinish(): void {
-    if (this.args.onFinish) this.args.onFinish();
+    this.args.onFinish?.();
   }
 
   @action
   onCycleComplete(): void {
-    if (this.args.onCycleComplete) this.args.onCycleComplete();
+    this.args.onCycleComplete?.();
   }
 }

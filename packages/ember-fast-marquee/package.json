@@ -78,8 +78,7 @@
     "main": "addon-main.js",
     "app-js": {
       "./components/marquee.js": "./dist/_app_/components/marquee.js",
-      "./modifiers/marquee.js": "./dist/_app_/modifiers/marquee.js",
-      "./modifiers/observe-mutation.js": "./dist/_app_/modifiers/observe-mutation.js"
+      "./modifiers/marquee.js": "./dist/_app_/modifiers/marquee.js"
     }
   },
   "exports": {

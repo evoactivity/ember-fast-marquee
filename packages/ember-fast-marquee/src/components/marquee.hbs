@@ -7,7 +7,6 @@
     fillRow=this.fillRow
     gradientWidth=this.gradientWidth
     loop=this.loop
-    marqueeSelector=this.styles.marquee
     pauseOnClick=this.pauseOnClick
     pauseOnHover=this.pauseOnHover
     play=this.play
@@ -20,17 +19,7 @@
   {{#if this.gradient}}
     <div class={{this.styles.overlay}} data-test-marquee-gradient></div>
   {{/if}}
-  <div
-    class={{this.styles.scroller}}
-    data-test-marquee-scroller
-    {{observe-mutation
-      this.resetAnimations
-      childList=true
-      subtree=false
-      attributes=false
-      characterData=false
-    }}
-  >
+  <div class={{this.styles.scroller}} data-test-marquee-scroller>
     <div
       class={{this.styles.marquee}}
       data-test-marquee-marquee
