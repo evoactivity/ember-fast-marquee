@@ -87,14 +87,7 @@ module('Marquee', function (hooks) {
 
     let translateX = new DOMMatrix(scroller.transform).m41;
 
-    const widthOfMarquee = this.element
-      .querySelector('[data-test-marquee-marquee]')
-      .getBoundingClientRect().width;
-
-    assert.strictEqual(
-      Math.round(translateX),
-      -Math.abs(Math.round(widthOfMarquee))
-    );
+    assert.ok(translateX < 0);
 
     this.set('playing', true);
     await new Promise((r) => setTimeout(r, 100));
