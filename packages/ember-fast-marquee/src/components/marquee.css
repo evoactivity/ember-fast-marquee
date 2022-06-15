@@ -4,7 +4,6 @@
   flex-direction: row;
   position: relative;
   width: 100%;
-  /* -webkit-font-smoothing: antialiased; */
 }
 
 .scroller {
@@ -61,7 +60,7 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(0px - var(--marquee-scroll-amount, 100%)));
+    transform: translateX(calc(-0px - var(--marquee-scroll-amount)));
   }
 }
 
