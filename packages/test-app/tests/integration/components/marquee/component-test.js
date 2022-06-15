@@ -36,7 +36,7 @@ module('Marquee', function (hooks) {
 
   test('Duplicated rows are aria-hidden', async function (assert) {
     await render(hbs`<Marquee>
-    abc
+      abc
     </Marquee>`);
 
     assert.dom('[data-test-marquee-repeater]').hasAria('hidden', 'true');
@@ -48,8 +48,11 @@ module('Marquee', function (hooks) {
     <Marquee @fillRow={{true}} style="width: 600px;">
     <div style="width:200px">abc</div>
     </Marquee>`);
-
-    assert.dom('[data-test-marquee-repeater]').exists({ count: 3 });
+    await new Promise((r) => setTimeout(r, 10));
+    assert
+      .dom('[data-test-marquee-repeater]')
+      .hasAria('hidden', 'true')
+      .exists({ count: 3 });
   });
 
   test('@direction="left" slides left', async function (assert) {
