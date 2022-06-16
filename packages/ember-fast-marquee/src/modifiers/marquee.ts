@@ -58,24 +58,24 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   }
 
   setArgsAsCSSVariables(): void {
-    const fillRow = this.fillRow ? 'max-content' : '100%';
-    const gradientColor = `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`;
     const play = this.play ? 'running' : 'paused';
+    const delay = `${this.delay}s`;
+    const fillRow = this.fillRow ? 'max-content' : '100%';
+    const direction = this.direction === 'left' ? 'normal' : 'reverse';
     const pauseOnHover = this.pauseOnHover ? 'paused' : play;
     const pauseOnClick = this.pauseOnClick ? 'paused' : play;
-    const direction = this.direction === 'left' ? 'normal' : 'reverse';
+    const gradientColor = `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`;
     const iterationCount = this.loop ? '' + this.loop : 'infinite';
-    const delay = `${this.delay}s`;
 
-    this.setProp('--gradient-color', gradientColor);
-    this.setProp('--gradient-width', this.gradientWidth);
+    this.setProp('--play', play);
+    this.setProp('--delay', delay);
+    this.setProp('--fill-row', fillRow);
+    this.setProp('--direction', direction);
     this.setProp('--pause-on-hover', pauseOnHover);
     this.setProp('--pause-on-click', pauseOnClick);
-    this.setProp('--play', play);
-    this.setProp('--direction', direction);
-    this.setProp('--delay', delay);
+    this.setProp('--gradient-color', gradientColor);
+    this.setProp('--gradient-width', this.gradientWidth);
     this.setProp('--iteration-count', iterationCount);
-    this.setProp('--fill-row', fillRow);
   }
 
   measureAndSetCSSVariables(): void {
