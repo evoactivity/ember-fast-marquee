@@ -34,9 +34,13 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   @service resizeObserver!: ResizeObserverService;
 
   boundFn!: () => void;
+  setProp!: CSSStyleDeclaration['setProperty'];
   component?: component;
   containerEl!: HTMLDivElement;
   marqueeEl!: HTMLDivElement;
+  listeningForResize = false;
+  numberOfDuplicatesNeeded = 1;
+
   delay?: MarqueeState['delay'];
   direction?: MarqueeState['direction'];
   fillRow?: MarqueeState['fillRow'];
@@ -47,12 +51,40 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   play?: MarqueeState['play'];
   rgbaGradientColor?: MarqueeState['rgbaGradientColor'];
   speed?: MarqueeState['speed'];
-  listeningForResize = false;
-  numberOfDuplicatesNeeded = 1;
 
   constructor(owner: unknown, args: ArgsFor<MarqueeModifierSignature>) {
     super(owner, args);
     registerDestructor(this, cleanup);
+  }
+
+  setArgsAsCSSVariables(): void {
+    if (
+      !this.marqueeEl ||
+      !this.containerEl ||
+      !this.component ||
+      !this.speed ||
+      !this.gradientWidth
+    ) {
+      return;
+    }
+
+    const fillRow = this.fillRow ? 'max-content' : '100%';
+    const gradientColor = `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`;
+    const play = this.play ? 'running' : 'paused';
+    const pauseOnHover = this.pauseOnHover ? 'paused' : play;
+    const pauseOnClick = this.pauseOnClick ? 'paused' : play;
+    const direction = this.direction === 'left' ? 'normal' : 'reverse';
+    const iterationCount = this.loop ? '' + this.loop : 'infinite';
+
+    this.setProp('--gradient-color', gradientColor);
+    this.setProp('--gradient-width', this.gradientWidth);
+    this.setProp('--pause-on-hover', pauseOnHover);
+    this.setProp('--pause-on-click', pauseOnClick);
+    this.setProp('--play', play);
+    this.setProp('--direction', direction);
+    this.setProp('--delay', `${this.delay}s`);
+    this.setProp('--iteration-count', iterationCount);
+    this.setProp('--fill-row', fillRow);
   }
 
   measureAndSetCSSVariables(): void {
@@ -65,28 +97,6 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     ) {
       return;
     }
-
-    const setProp = this.containerEl.style.setProperty.bind(
-      this.containerEl.style
-    );
-
-    const fillRow = this.fillRow ? 'max-content' : '100%';
-    const gradientColor = `${this.rgbaGradientColor}, 1), ${this.rgbaGradientColor}, 0)`;
-    const play = this.play ? 'running' : 'paused';
-    const pauseOnHover = this.pauseOnHover ? 'paused' : play;
-    const pauseOnClick = this.pauseOnClick ? 'paused' : play;
-    const direction = this.direction === 'left' ? 'normal' : 'reverse';
-    const iterationCount = this.loop ? '' + this.loop : 'infinite';
-
-    setProp('--gradient-color', gradientColor);
-    setProp('--gradient-width', this.gradientWidth);
-    setProp('--pause-on-hover', pauseOnHover);
-    setProp('--pause-on-click', pauseOnClick);
-    setProp('--play', play);
-    setProp('--direction', direction);
-    setProp('--delay', `${this.delay}s`);
-    setProp('--iteration-count', iterationCount);
-    setProp('--fill-row', fillRow);
 
     const containerWidth = this.containerEl.getBoundingClientRect().width;
     const marqueeWidth = this.marqueeEl.getBoundingClientRect().width;
@@ -116,8 +126,8 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
         ? `${marqueeWidth}px`
         : '100%';
 
-    setProp('--marquee-scroll-amount', scrollAmount);
-    setProp('--duration', duration);
+    this.setProp('--marquee-scroll-amount', scrollAmount);
+    this.setProp('--duration', duration);
   }
 
   modify(
@@ -141,6 +151,9 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     this.marqueeEl = <HTMLDivElement>(
       this.containerEl.querySelector('.' + this.component.styles.marquee)
     );
+    this.setProp = this.containerEl.style.setProperty.bind(
+      this.containerEl.style
+    );
     this.delay = delay;
     this.direction = direction;
     this.fillRow = fillRow;
@@ -152,6 +165,7 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
     this.rgbaGradientColor = rgbaGradientColor;
     this.speed = speed;
 
+    this.setArgsAsCSSVariables();
     this.measureAndSetCSSVariables();
 
     if (!this.listeningForResize) {
