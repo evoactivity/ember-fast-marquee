@@ -4,17 +4,12 @@
   flex-direction: row;
   position: relative;
   width: 100%;
-  --fill-row: 100%;
-  --marquee-scroll-amount: 100%;
 }
 
 .scroller {
   display: flex;
   flex-direction: row;
   width: 100%;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform;
   transform: translate3d(0, 0, 0);
   animation: scroll var(--duration) linear var(--delay) var(--iteration-count);
   animation-play-state: var(--play);
@@ -22,18 +17,24 @@
   animation-direction: var(--direction);
 }
 
-.root:active .scroller {
-  animation-play-state: var(--pause-on-click);
-}
-
+/* controls pause on hover */
 .root:hover .scroller {
   animation-play-state: var(--pause-on-hover);
 }
 
-.root[style*='--pause-on-click: paused']:hover:active .scroller {
+/* controls pause on click */
+.root:active .scroller {
   animation-play-state: var(--pause-on-click);
 }
 
+/* makes sure hovering whilst clicking doesn't change play state to --pause-on-hover value */
+.root[style*='--pause-on-click: paused']:hover:active .scroller,
+.root[style*='--pause-on-click:paused']:hover:active .scroller {
+  animation-play-state: var(--pause-on-click);
+}
+
+/* makes sure clicking while hovering doesn't change play state to --pause-on-click value */
+.root[style*='--pause-on-hover:paused']:hover:active .scroller,
 .root[style*='--pause-on-hover: paused']:hover:active .scroller {
   animation-play-state: var(--pause-on-hover);
 }
@@ -41,6 +42,15 @@
 @media (prefers-reduced-motion) {
   .root .scroller {
     animation-play-state: paused !important;
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(calc(0px - var(--marquee-scroll-amount)), 0, 0);
   }
 }
 
@@ -52,39 +62,28 @@
 
 .overlay::before,
 .overlay::after {
-  background: linear-gradient(to right, var(--gradient-color));
   content: '';
-  height: 100%;
   position: absolute;
+  top: 0;
+  background: linear-gradient(to right, var(--gradient-color));
+  height: 100%;
   width: var(--gradient-width);
   z-index: 2;
 }
 
-.overlay::after {
-  right: 0;
-  top: 0;
-  transform: rotateZ(180deg);
-}
-
 .overlay::before {
   left: 0;
-  top: 0;
+}
+.overlay::after {
+  right: 0;
+  transform: rotateZ(180deg);
 }
 
 .marquee {
   flex: 0 0 auto;
-  min-width: var(--fill-row);
+  min-width: var(--fill-row, 100%);
   z-index: 1;
   display: flex;
   flex-direction: row;
   align-items: center;
-}
-
-@keyframes scroll {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(calc(-0px - var(--marquee-scroll-amount)), 0, 0);
-  }
 }
