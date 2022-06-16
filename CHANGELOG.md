@@ -3,6 +3,16 @@
 
 
 
+
+## v0.1.8 (2022-06-16)
+
+#### :rocket: Enhancement
+* `ember-fast-marquee`, `test-app`
+  * [#21](https://github.com/evoactivity/ember-fast-marquee/pull/21) Improvements from mutation observer spike ([@evoactivity](https://github.com/evoactivity))
+
+#### Committers: 1
+- Liam Potter ([@evoactivity](https://github.com/evoactivity))
+
 ## v0.1.7 (2022-06-14)
 
 #### :rocket: Enhancement
