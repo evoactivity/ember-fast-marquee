@@ -1,7 +1,7 @@
 import Modifier, { ArgsFor, PositionalArgs, NamedArgs } from 'ember-modifier';
 import { registerDestructor } from '@ember/destroyable';
-import type component from '../components/marquee';
 import { inject as service } from '@ember/service';
+import type component from '../components/marquee';
 import type ResizeObserverService from 'ember-resize-observer-service/services/resize-observer';
 
 interface MarqueeModifierSignature {
@@ -36,8 +36,8 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   boundFn!: () => void;
   setProp!: CSSStyleDeclaration['setProperty'];
   component!: component;
-  containerEl!: HTMLDivElement;
-  marqueeEl!: HTMLDivElement;
+  containerEl!: HTMLElement;
+  marqueeEl!: HTMLElement;
   listeningForResize = false;
   numberOfDuplicatesNeeded = 1;
 
@@ -112,7 +112,7 @@ export default class MarqueeModifier extends Modifier<MarqueeModifierSignature> 
   }
 
   modify(
-    element: HTMLDivElement,
+    element: HTMLElement,
     [componentContext]: PositionalArgs<MarqueeModifierSignature>,
     {
       delay,
