@@ -29,7 +29,7 @@
     "prettier": "^2.6.2",
     "release-it": "^15.0.0",
     "release-it-lerna-changelog": "^4.0.1",
-    "release-it-yarn-workspaces": "^2.0.1"
+    "release-it-yarn-workspaces": "^3.0.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
