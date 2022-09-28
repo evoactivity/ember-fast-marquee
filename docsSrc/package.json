@@ -72,7 +72,7 @@
     "postcss-font-magician": "3.0.0",
     "postcss-hexrgba": "2.0.1",
     "postcss-import": "15.0.0",
-    "postcss-loader": "7.0.0",
+    "postcss-loader": "7.0.1",
     "postcss-nested": "5.0.6",
     "postcss-responsive-type": "1.0.0",
     "postcss-simple-vars": "7.0.0",
