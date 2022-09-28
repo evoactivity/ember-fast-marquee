@@ -70,7 +70,7 @@
     "postcss-easing-gradients": "3.0.1",
     "postcss-easy-import": "4.0.0",
     "postcss-font-magician": "3.0.0",
-    "postcss-hexrgba": "2.0.1",
+    "postcss-hexrgba": "2.1.0",
     "postcss-import": "15.0.0",
     "postcss-loader": "7.0.1",
     "postcss-nested": "5.0.6",
