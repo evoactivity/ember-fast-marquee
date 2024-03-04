@@ -88,6 +88,6 @@
   "peerDependencies": {
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
-    "ember-source": "^4.4.0"
+    "ember-source": "^5.0.0"
   }
 }
