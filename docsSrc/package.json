@@ -39,7 +39,7 @@
     "cssnano": "^5.1.11",
     "ember-auto-import": "^2.4.2",
     "ember-build-prerender": "^0.3.2",
-    "ember-cli": "~4.8.0",
+    "ember-cli": "~5.12.0",
     "ember-cli-app-version": "^5.0.0",
     "ember-cli-babel": "^7.26.11",
     "ember-cli-dependency-checker": "^3.3.1",
