@@ -29,7 +29,7 @@
     "@embroider/core": "^1.8.0",
     "@embroider/router": "^1.8.0",
     "@embroider/webpack": "^1.8.0",
-    "@glimmer/component": "^1.1.2",
+    "@glimmer/component": "^2.0.0",
     "@glimmer/tracking": "^1.1.2",
     "@tailwindcss/forms": "0.5.3",
     "@tailwindcss/typography": "0.5.8",

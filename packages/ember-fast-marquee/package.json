@@ -86,7 +86,7 @@
     "./addon-main.js": "./addon-main.js"
   },
   "peerDependencies": {
-    "@glimmer/component": "^1.1.2",
+    "@glimmer/component": "^2.0.0",
     "@glimmer/tracking": "^1.1.2",
     "ember-source": "^4.4.0"
   }
