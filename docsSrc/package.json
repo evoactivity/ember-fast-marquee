@@ -34,7 +34,7 @@
     "@tailwindcss/forms": "0.5.3",
     "@tailwindcss/typography": "0.5.8",
     "autoprefixer": "^10.4.7",
-    "babel-eslint": "^10.1.0",
+    "@babel/eslint-parser": "^7.11.0",
     "broccoli-asset-rev": "^3.0.0",
     "cssnano": "^5.1.11",
     "ember-auto-import": "^2.4.2",
